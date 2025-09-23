@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* (Opcional) estilos globais do projeto */
+:root {
+  --brand: #2563eb;
+}
