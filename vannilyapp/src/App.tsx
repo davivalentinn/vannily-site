@@ -4,6 +4,7 @@ import { createBrowserRouter } from 'react-router-dom'
 //Importa páginas
 import { Home } from './pages/home';
 import { Cart }from './pages/cart'
+import { Favorites } from './pages/favorites';
 //Fim Importa páginas
 
 //Importa Components
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: "/cart",
         element: <Cart/>
+      },
+      {
+        path: "/favorites",
+        element: <Favorites/>
       }
     ]
 
