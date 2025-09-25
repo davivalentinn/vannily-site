@@ -1,15 +1,30 @@
 
-import './App.css'
+import { createBrowserRouter } from 'react-router-dom'
 
-function App() {
+//Importa páginas
+import { Home } from './pages/home';
+import { Cart }from './pages/cart'
+//Fim Importa páginas
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <h1 className="text-3xl font-bold text-blue-600">
-        Tailwind funcionando! 🚀
-      </h1>
-    </div>
-  )
-}
+//Importa Components
+import { Layout } from './components/Layout';
+//Fim Importa Components
 
-export default App
+const router = createBrowserRouter([
+  {
+    element: <Layout/>,
+    children: [
+      {
+        path: "/",
+        element: <Home/>
+      },
+      {
+        path: "/cart",
+        element: <Cart/>
+      }
+    ]
+
+  }
+])
+
+export {router}
