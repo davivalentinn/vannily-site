@@ -1,12 +1,21 @@
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 
-
 /* (Opcional) estilos globais do projeto */
 :root {
   --brand: #2563eb;
+}
+
+@layer base {
+  a {
+    @apply font-roboto font-medium text-white;
+  }
+  input[type="text"]{
+    @apply font-roboto font-normal
+  }
+  i{
+    @apply text-xl text-white
+  }
 }

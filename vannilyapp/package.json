@@ -11,6 +11,7 @@
     "tailwind:watch": "tailwindcss -i ./src/index.css -o ./src/tailwind.css --watch"
   },
   "dependencies": {
+    "lucide-react": "^0.544.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.9.1",
@@ -20,6 +21,7 @@
     "@eslint/js": "^9.36.0",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^8.44.0",
     "@vitejs/plugin-react": "^5.0.3",
     "autoprefixer": "^10.4.19",
     "eslint": "^9.36.0",
@@ -29,7 +31,6 @@
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.10",
     "typescript": "~5.8.3",
-    "@typescript-eslint/eslint-plugin": "^8.44.0",
     "vite": "^7.1.7"
   }
 }

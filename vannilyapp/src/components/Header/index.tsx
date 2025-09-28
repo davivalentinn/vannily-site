@@ -1,23 +1,33 @@
 
 import { Link } from "react-router-dom";
+import { Search } from "../Search";
+import { ButtonRegisterOrLogin } from "../ButtonRegisterOrLogin";
+import { ButtonSearchCep } from "../ButtonSearchCep";
 
 export function Header() {
     return (
         <header className="w-full px-1 bg-primary">
-            <nav className="w-full max-w-7xl h-20 flex items-center justify-between px-5 mx-auto">
-                <Link to="/">
-                    <img className="h-16 w-auto" src="/logo.svg" alt="" />
-                </Link>
-
-                <div className="flex items-center  gap-4">
-                    <Link className="bg-button p-1 px-2 rounded" to="/cart">
-                        <i className="ri-shopping-cart-line text-xl text-white"></i>
-                    </Link>
-                    <Link className="bg-button p-1 px-2 rounded" to="/favorites">
-                        <i className="ri-heart-add-2-line text-xl text-white"></i>
+            <nav className="w-full max-w-7xl h-22 items-center flex justify-between px-1 mx-auto gap-4
+            
+            ">
+                <div className="py-2">
+                    <Link to="/">
+                        <img className="h-20 " src="/logo.svg" alt="" />
                     </Link>
                 </div>
 
+               
+                <Search />
+
+                <div className="flex items-center gap-2">
+                    <Link className="bg-button px-3 py-2 rounded" to="/cart">
+                        <i className="ri-shopping-cart-line"></i>
+                    </Link>
+                    <Link className="bg-button p-2 px-3 rounded" to="/favorites">
+                        <i className="ri-heart-add-2-line"></i>
+                    </Link>
+                    <ButtonRegisterOrLogin />
+                </div>
 
             </nav>
         </header>
