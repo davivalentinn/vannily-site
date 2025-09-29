@@ -1,9 +1,9 @@
+import { RegisterForm } from "../../../features/auth/components/RegisterForm"
+import { LoginForm } from "../../../features/auth/components/LoginForm"
+
 
 export function Register() {
     return (
-        <main className="w-full  max-w-7xl flex gap-4 justify-center items-center m-auto">
-            <h1>Criar Conta</h1>
-            <i className="ri-heart-add-2-line"></i>
-        </main>
+        <RegisterForm/>
     )
 }
