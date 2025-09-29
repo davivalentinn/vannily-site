@@ -8,7 +8,8 @@ export default {
     extend: {
       colors: {
         primary: '#1C1C1C',
-        button: '#8B1689'
+        button: '#8B1689',
+        background: '#8B1689'
       },
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],
