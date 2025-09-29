@@ -4,11 +4,11 @@ export function ButtonRegisterOrLogin() {
     return (
         <div className="bg-button px-4 py-1 flex items-center justify-between min-w-[180px] rounded-lg">
             <div className="flex items-center justify-center space-x-1">
-                <Link to="#" className="hover:text-white/90 transition-colors">
+                <Link to="/account/register" className="hover:text-white/90 transition-colors">
                     Registrar
                 </Link>
                 <p className="font-roboto font-normal text-white/80">ou</p>
-                <Link to="#" className="hover:text-white/90 transition-colors">
+                <Link to="/account/login" className="hover:text-white/90 transition-colors">
                     Entrar
                 </Link>
             </div>

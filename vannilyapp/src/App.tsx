@@ -5,6 +5,8 @@ import { createBrowserRouter } from 'react-router-dom'
 import { Home } from './pages/home';
 import { Cart }from './pages/cart'
 import { Favorites } from './pages/favorites';
+import { Login } from './pages/account/login';
+import { Register } from './pages/account/register';
 //Fim Importa páginas
 
 //Importa Components
@@ -26,6 +28,14 @@ const router = createBrowserRouter([
       {
         path: "/favorites",
         element: <Favorites/>
+      },
+      {
+        path: "/account/register",
+        element: <Register/>
+      },
+      {
+        path: "/account/login",
+        element: <Login/>
       }
     ]
 
