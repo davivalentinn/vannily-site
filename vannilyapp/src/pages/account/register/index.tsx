@@ -1,9 +1,8 @@
-import { RegisterForm } from "../../../features/auth/components/RegisterForm"
-import { LoginForm } from "../../../features/auth/components/LoginForm"
+import { RegisterPage } from "../../../features/auth/components/register/RegisterPage"
 
 
 export function Register() {
     return (
-        <RegisterForm/>
+        <RegisterPage/>
     )
 }
