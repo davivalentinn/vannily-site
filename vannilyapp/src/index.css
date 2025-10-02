@@ -18,4 +18,8 @@
   i{
     @apply text-xl text-white
   }
+
+  h2 {
+    @apply font-montserrat font-bold uppercase text-base
+  }
 }
