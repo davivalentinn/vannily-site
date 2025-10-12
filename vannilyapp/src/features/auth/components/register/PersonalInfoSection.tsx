@@ -1,45 +1,84 @@
+import React, { useState } from 'react';
 
-export function PersonalInfoSection() {
-    return (
-        <section className="flex flex-col justify-center items-center">
-            <div className="">
-                <h2 className="">Informações Pessoais</h2>
-            </div>
+// PersonalInfoSection.tsx
+interface PersonalInfoSectionProps {
+  formData: {
+    fullName: string;
+    phone: string;
+    receiveOffers: boolean;
+    acceptPrivacy: boolean;
+  };
+  onChange: (field: string, value: string | boolean) => void;
+}
 
-            <div className="relative my-[5px] mx-5">
-                <input
-                className="px-5 py-2 text-[#1f1f1f] appearance-none border-2 border-black/50 rounded-sm w-full shadow-md focus:outline-none"
-                type="text" name="name" required />
-                <label 
-                className="absolute left-4 top-1/2 -translate-y-1/2 px-1 text-[16px] font-poppins font-normal text-[var(--title-color)] transition-all peer-focus:top-0 peer-focus:bg-white peer-focus:text-sm peer-valid:top-0 peer-valid:bg-white peer-valid:text-sm"
-                htmlFor="name">*Nome Completo</label>
-            </div>
-            <div>
-                <input type="number" name="phone" required />
-                <label htmlFor="phone">*DDD e número de celular</label>
-            </div>
-            <div>
-                <div>
-                    <input type="checkbox" checked />
-                </div>
-                <div>
-                    <p>
-                        Quero receber <b>ofertas</b> e <b>novidades</b> da loja Vannily
-                        por <b>e-mail</b>
-                    </p>
-                </div>
-            </div>
+export function PersonalInfoSection({ formData, onChange }: PersonalInfoSectionProps) {
+  return (
+    <section className="flex flex-col">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">INFORMAÇÕES PESSOAIS</h2>
 
-            <div>
-                <div>
-                    <input type="checkbox" checked />
-                </div>
+      <div className="relative mb-5">
+        <input
+          className="peer px-4 py-3 text-gray-800 border-2 border-gray-400 rounded w-full focus:outline-none focus:border-background placeholder-transparent"
+          type="text"
+          id="fullName"
+          value={formData.fullName}
+          onChange={(e) => onChange('fullName', e.target.value)}
+          placeholder="Nome completo"
+          required
+        />
+        <label
+          className="absolute left-3 -top-2.5 bg-white px-2 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-background"
+          htmlFor="fullName"
+        >
+          *Nome completo
+        </label>
+      </div>
 
-                <p>
-                    Concordo com o uso dos meus dados para compra e experiência no site conforme a <b> política de privacidade </b>
-                </p>
-            </div>
+      <div className="relative mb-5">
+        <input
+          className="peer px-4 py-3 text-gray-800 border-2 border-gray-400 rounded w-full focus:outline-none focus:border-background placeholder-transparent"
+          type="tel"
+          id="phone"
+          value={formData.phone}
+          onChange={(e) => onChange('phone', e.target.value)}
+          placeholder="DDD e número de celular"
+          required
+        />
+        <label
+          className="absolute left-3 -top-2.5 bg-white px-2 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-background"
+          htmlFor="phone"
+        >
+          *DDD e número de celular
+        </label>
+      </div>
 
-        </section>
-    )
+      <div className="flex items-start mb-4">
+        <input
+          type="checkbox"
+          id="receiveOffers"
+          checked={formData.receiveOffers}
+          onChange={(e) => onChange('receiveOffers', e.target.checked)}
+          className="w-5 h-5 mt-0.5 accent-background cursor-pointer flex-shrink-0"
+        />
+        <label htmlFor="receiveOffers" className="ml-3 text-sm text-gray-700 cursor-pointer">
+          Quero receber <strong>ofertas</strong> e <strong>novidades</strong> da loja Vinnaly por <strong>e-mail</strong>
+        </label>
+      </div>
+
+      <div className="flex items-start">
+        <input
+          type="checkbox"
+          id="acceptPrivacy"
+          checked={formData.acceptPrivacy}
+          onChange={(e) => onChange('acceptPrivacy', e.target.checked)}
+          className="w-5 h-5 mt-0.5 accent-background cursor-pointer flex-shrink-0"
+          required
+        />
+        <label htmlFor="acceptPrivacy" className="ml-3 text-sm text-gray-700 cursor-pointer">
+          Concordo com o uso dos meus dados para compra e experiência no site conforme a{' '}
+          <strong>Política de privacidade</strong>
+        </label>
+      </div>
+    </section>
+  );
 }

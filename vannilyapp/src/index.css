@@ -12,14 +12,20 @@
   a {
     @apply font-roboto font-medium text-white;
   }
-  input[type="text"]{
+
+  input[type="text"] {
     @apply font-roboto font-normal
   }
-  i{
+
+  i {
     @apply text-xl text-white
   }
 
   h2 {
     @apply font-montserrat font-bold uppercase text-base
+  }
+
+  h1 {
+    @apply font-montserrat font-black uppercase text-3xl
   }
 }

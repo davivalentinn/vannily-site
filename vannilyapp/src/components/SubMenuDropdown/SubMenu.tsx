@@ -11,21 +11,21 @@ export const SubMenu: React.FC = () => {
           <div className="flex items-center gap-6">
             <Dropdown label="Catálogo" items={catalogoItems} />
             
-            <Link to="#" 
-              className="px-2 py-2 hover:text-white/90 transition-colors duration-200"
+            <a href='#' 
+              className=" px-2 py-2 hover:text-white/90 transition-colors duration-200"
             >
               Mais Vendidos
-            </Link>
+            </a>
             
             <Dropdown label="Moda Geek" items={modaGeekItems} />
             
             <Dropdown label="BoardGames" items={boardGamesItems} />
             
-            <Link to="#"  
+            <a href='#' 
               className="px-2 py-2  hover:text-white/90 transition-colors duration-200"
             >
               Destaques
-            </Link>
+            </a>
           </div>
 
           {/* Informações do Site - Direita */}
