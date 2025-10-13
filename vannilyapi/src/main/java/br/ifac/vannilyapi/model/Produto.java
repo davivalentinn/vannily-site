@@ -17,10 +17,8 @@ public class Produto implements Serializable {
     @Column(length = 255)
     private String imagem;
 
-    @Column(precision = 10, scale = 2)
     private Double preco;
 
-    @Column(precision = 10, scale = 2)
     private Double desconto;
 
     private Integer unidades;
