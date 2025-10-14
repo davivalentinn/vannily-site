@@ -16,7 +16,7 @@ public class ProdutoService implements ICrudService<Produto>, IPageService<Produ
     private final ProdutoRepository repo;
 
     public ProdutoService(ProdutoRepository repo) {
-        this.repo = repo;
+        this.repo = repo;   
     }
 
     @Override
