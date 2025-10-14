@@ -36,7 +36,29 @@ public class Produto implements Serializable {
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;
 
+    @Column(length = 50)
+    private String tema;
+
+    @Column(length = 50)
+    private String genero;
+
     // Getters e Setters
+    public String getTema() {
+        return tema;
+    }
+
+    public void setTema(String tema) {
+        this.tema = tema;
+    }
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
+    }
+
     public Long getId() {
         return id;
     }
