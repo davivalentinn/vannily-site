@@ -98,3 +98,39 @@ VALUES
 (38, 38, 'Educação', 'Juvenil', 3, '10+', '45min', 'Cartas', 'Médio', 'Plástico', 'Tabuleiro', 40, TRUE, 0, NULL, NULL, NULL, 'Médio', TRUE),
 (39, 39, 'Esportes', 'Adulto', 4, '12+', '60min', 'Cartas', 'Grande', 'Plástico', 'Tabuleiro', 60, TRUE, 0, NULL, NULL, NULL, 'Difícil', TRUE),
 (40, 40, 'Aventura', 'Infantil', 2, 'Livre', '30min', 'Cartas', 'Pequeno', 'Papel', 'Cartas', 25, TRUE, 0, NULL, NULL, NULL, 'Fácil', TRUE);
+
+-- Usuário
+INSERT INTO `usuario` (`id`, `nome`, `usuario`, `email`, `senha`, `data_criacao`) VALUES
+(1, 'Elyvan Bernardino', 'elyvan', 'elyvan@email.com', 'senha123', NOW()),
+(2, 'Alvaro Rios', 'alvaro', 'alvaro@email.com', 'senha123', NOW()),
+(3, 'Davi Valetins', 'davi', 'davi@email.com', 'senha123', NOW());
+
+-- Endereço
+INSERT INTO `endereco` (`id`, `id_usuario`, `cep`, `pais`, `estado`, `cidade`, `bairro`, `rua`, `numero`, `complemento`) VALUES
+(1, 1, '69900-000', 'Brasil', 'Acre', 'Rio Branco', 'Santa Inês', 'Rua das Flores', '123', 'Apto 101'),
+(2, 2, '69900-001', 'Brasil', 'Acre', 'Rio Branco', 'Bosque', 'Rua das Palmeiras', '45', NULL),
+(3, 3, '69900-002', 'Brasil', 'Acre', 'Rio Branco', 'Centro', 'Av. Sete de Setembro', '789', 'Casa');
+
+-- ProdutoRoupa (20 itens)
+INSERT INTO `produto_roupa` (`id`, `id_produto`, `tamanho`, `cor`, `dimensoes`, `numero_modelo`, `tipo_capuz`, `espessura_tecido`, `material_forro`, `possui_ziper`, `resistente_agua`, `tipo_gola`, `tipo_manga`, `tecido`, `possui_bolsos`, `estampa_personalizada`, `modelo`) VALUES
+(1, 1, 'P', 'Azul', '90x45', 'M101', TRUE, 'Fino', 'Poliéster', TRUE, TRUE, 'Redonda', 'Curta', 'Algodão', TRUE, FALSE, 'Casual'),
+(2, 2, 'M', 'Preto', '100x50', 'M102', FALSE, 'Médio', 'Algodão', FALSE, FALSE, 'V', 'Longa', 'Malha', FALSE, TRUE, 'Esportivo'),
+(3, 3, 'G', 'Vermelho', '110x55', 'M103', TRUE, 'Grossa', 'Poliéster', TRUE, FALSE, 'Gola Alta', 'Curta', 'Moletom', TRUE, TRUE, 'Inverno'),
+(4, 4, 'P', 'Verde', '90x45', 'M104', FALSE, 'Fino', 'Algodão', FALSE, TRUE, 'Redonda', 'Curta', 'Algodão', TRUE, FALSE, 'Casual'),
+(5, 5, 'M', 'Cinza', '100x50', 'M105', TRUE, 'Médio', 'Poliéster', TRUE, TRUE, 'V', 'Longa', 'Malha', TRUE, TRUE, 'Esportivo'),
+(6, 6, 'G', 'Amarelo', '110x55', 'M106', FALSE, 'Grossa', 'Algodão', FALSE, FALSE, 'Gola Alta', 'Curta', 'Moletom', FALSE, FALSE, 'Inverno'),
+(7, 7, 'P', 'Roxo', '90x45', 'M107', TRUE, 'Fino', 'Poliéster', TRUE, TRUE, 'Redonda', 'Longa', 'Algodão', TRUE, TRUE, 'Casual'),
+(8, 8, 'M', 'Branco', '100x50', 'M108', FALSE, 'Médio', 'Malha', FALSE, TRUE, 'V', 'Curta', 'Malha', FALSE, FALSE, 'Esportivo'),
+(9, 9, 'G', 'Preto', '110x55', 'M109', TRUE, 'Grossa', 'Poliéster', TRUE, TRUE, 'Gola Alta', 'Longa', 'Moletom', TRUE, TRUE, 'Inverno'),
+(10, 10, 'P', 'Azul Claro', '90x45', 'M110', FALSE, 'Fino', 'Algodão', FALSE, FALSE, 'Redonda', 'Curta', 'Algodão', TRUE, FALSE, 'Casual'),
+(11, 11, 'M', 'Verde Escuro', '100x50', 'M111', TRUE, 'Médio', 'Poliéster', TRUE, TRUE, 'V', 'Longa', 'Malha', TRUE, TRUE, 'Esportivo'),
+(12, 12, 'G', 'Laranja', '110x55', 'M112', FALSE, 'Grossa', 'Algodão', FALSE, FALSE, 'Gola Alta', 'Curta', 'Moletom', FALSE, FALSE, 'Inverno'),
+(13, 13, 'P', 'Rosa', '90x45', 'M113', TRUE, 'Fino', 'Poliéster', TRUE, TRUE, 'Redonda', 'Longa', 'Algodão', TRUE, TRUE, 'Casual'),
+(14, 14, 'M', 'Cinza Claro', '100x50', 'M114', FALSE, 'Médio', 'Malha', FALSE, TRUE, 'V', 'Curta', 'Malha', FALSE, FALSE, 'Esportivo'),
+(15, 15, 'G', 'Marrom', '110x55', 'M115', TRUE, 'Grossa', 'Poliéster', TRUE, TRUE, 'Gola Alta', 'Longa', 'Moletom', TRUE, TRUE, 'Inverno'),
+(16, 16, 'P', 'Preto e Branco', '90x45', 'M116', FALSE, 'Fino', 'Algodão', FALSE, FALSE, 'Redonda', 'Curta', 'Algodão', TRUE, FALSE, 'Casual'),
+(17, 17, 'M', 'Azul Marinho', '100x50', 'M117', TRUE, 'Médio', 'Poliéster', TRUE, TRUE, 'V', 'Longa', 'Malha', TRUE, TRUE, 'Esportivo'),
+(18, 18, 'G', 'Amarelo Claro', '110x55', 'M118', FALSE, 'Grossa', 'Algodão', FALSE, FALSE, 'Gola Alta', 'Curta', 'Moletom', FALSE, FALSE, 'Inverno'),
+(19, 19, 'P', 'Verde Claro', '90x45', 'M119', TRUE, 'Fino', 'Poliéster', TRUE, TRUE, 'Redonda', 'Longa', 'Algodão', TRUE, TRUE, 'Casual'),
+(20, 20, 'M', 'Vermelho Escuro', '100x50', 'M120', FALSE, 'Médio', 'Malha', FALSE, TRUE, 'V', 'Curta', 'Malha', FALSE, FALSE, 'Esportivo');
+
