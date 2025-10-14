@@ -16,7 +16,7 @@ public class ProdutoService implements ICrudService<Produto>, IPageService<Produ
     private final ProdutoRepository repo;
 
     public ProdutoService(ProdutoRepository repo) {
-        this.repo = repo;   
+        this.repo = repo;
     }
 
     @Override
@@ -34,8 +34,8 @@ public class ProdutoService implements ICrudService<Produto>, IPageService<Produ
     @Override
     public Page<Produto> consultar(String termoBusca, Pageable paginacao) {
         termoBusca = (termoBusca == null || termoBusca.isBlank())
-            ? null
-            : StringUtils.trimAllWhitespace(termoBusca);
+                ? null
+                : StringUtils.trimAllWhitespace(termoBusca);
 
         return repo.buscar(termoBusca, paginacao);
     }
@@ -63,5 +63,16 @@ public class ProdutoService implements ICrudService<Produto>, IPageService<Produ
 
     public List<Produto> buscarPromocoes() {
         return repo.buscarPromocoes();
+    }
+
+    public List<Produto> buscarPorTemaOuGenero(String tema, String genero) {
+        if ((tema == null || tema.isBlank()) && (genero == null || genero.isBlank())) {
+            return repo.findAll();
+        }
+
+        tema = (tema == null || tema.isBlank()) ? null : StringUtils.trimAllWhitespace(tema);
+        genero = (genero == null || genero.isBlank()) ? null : StringUtils.trimAllWhitespace(genero);
+
+        return repo.buscarPorTemaOuGenero(tema, genero);
     }
 }

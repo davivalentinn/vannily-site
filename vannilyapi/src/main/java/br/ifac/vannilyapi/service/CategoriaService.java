@@ -22,7 +22,7 @@ public class CategoriaService implements ICrudService<Categoria> {
         if (termoBusca == null || termoBusca.isBlank()) {
             return repo.findAll();
         }
-
+            
         termoBusca = StringUtils.trimAllWhitespace(termoBusca);
         return repo.buscarPorNome(termoBusca);
     }
