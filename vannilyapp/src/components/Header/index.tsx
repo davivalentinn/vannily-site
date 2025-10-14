@@ -20,12 +20,13 @@ export function Header() {
                 <Search />
 
                 <div className="flex items-center gap-2">
+                <Link className="bg-button p-2 px-3 rounded-lg" to="/favorites">
+                        <i className="ri-heart-add-2-line"></i>
+                    </Link>
                     <Link className="bg-button px-3 py-2 rounded-lg" to="/cart">
                         <i className="ri-shopping-cart-line"></i>
                     </Link>
-                    <Link className="bg-button p-2 px-3 rounded-lg" to="/favorites">
-                        <i className="ri-heart-add-2-line"></i>
-                    </Link>
+                    
                     <ButtonRegisterOrLogin />
                 </div>
 
