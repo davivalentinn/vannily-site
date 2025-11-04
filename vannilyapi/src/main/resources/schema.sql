@@ -6,7 +6,7 @@ USE vannilydb;
 -- TABELA: categoria
 -- =========================
 CREATE TABLE categoria (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL
 );
 
@@ -14,7 +14,7 @@ CREATE TABLE categoria (
 -- TABELA: produto
 -- =========================
 CREATE TABLE produto (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(255) NOT NULL,
     imagem VARCHAR(500),
     preco DECIMAL(10,2) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE produto (
 -- TABELA: produto_jogo
 -- =========================
 CREATE TABLE produto_jogo (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     id_produto INT NOT NULL,
     tema VARCHAR(100),
     genero VARCHAR(100),
@@ -67,7 +67,7 @@ CREATE TABLE usuario (
     email VARCHAR(255) UNIQUE NOT NULL,
     senha VARCHAR(255) NOT NULL,
     tipoUsuario ENUM('ADMIN', 'USER') NOT NULL,
-    data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -75,7 +75,7 @@ CREATE TABLE usuario (
 -- TABELA: endereco
 -- =========================
 CREATE TABLE endereco (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT NOT NULL,
     cep VARCHAR(20),
     pais VARCHAR(100),
@@ -93,7 +93,7 @@ CREATE TABLE endereco (
 -- TABELA: produto_roupa
 -- =========================
 CREATE TABLE produto_roupa (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     id_produto INT NOT NULL,
     tamanho VARCHAR(10),
     cor VARCHAR(50),
