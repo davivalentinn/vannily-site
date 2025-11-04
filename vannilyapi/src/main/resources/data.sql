@@ -100,10 +100,10 @@ VALUES
 (40, 40, 'Aventura', 'Infantil', 2, 'Livre', '30min', 'Cartas', 'Pequeno', 'Papel', 'Cartas', 25, TRUE, 0, NULL, NULL, NULL, 'Fácil', TRUE);
 
 -- Usuário
-INSERT INTO `usuario` (`id`, `nome`, `usuario`, `email`, `senha`, `data_criacao`) VALUES
-(1, 'Elyvan Bernardino', 'elyvan', 'elyvan@email.com', 'senha123', NOW()),
-(2, 'Alvaro Rios', 'alvaro', 'alvaro@email.com', 'senha123', NOW()),
-(3, 'Davi Valetins', 'davi', 'davi@email.com', 'senha123', NOW());
+INSERT INTO usuario (nome, usuario, email, senha, tipoUsuario) VALUES 
+('Admin Master', 'admin', 'admin@ifac.br', '$2a$12$7rQxVCFfKIxOqf0.vuN9oORnCWMuYZ37KNWRwrXksqXkUO4bpCurG', 'ADMIN'),
+('Usuário Padrão', 'user', 'user@ifac.br', '$2a$12$Wc0mYajjoBKfXwT7DaJUsuSsXdZPzVqaJmfayzNnIPyb7XP3qjPO6', 'USER');
+
 
 -- Endereço
 INSERT INTO `endereco` (`id`, `id_usuario`, `cep`, `pais`, `estado`, `cidade`, `bairro`, `rua`, `numero`, `complemento`) VALUES

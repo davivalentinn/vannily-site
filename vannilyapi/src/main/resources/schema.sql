@@ -61,13 +61,15 @@ CREATE TABLE produto_jogo (
 -- TABELA: usuario
 -- =========================
 CREATE TABLE usuario (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(255) NOT NULL,
     usuario VARCHAR(100) UNIQUE NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     senha VARCHAR(255) NOT NULL,
-    data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP
+    tipoUsuario ENUM('ADMIN', 'USER') NOT NULL,
+    data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP,
 );
+
 
 -- =========================
 -- TABELA: endereco

@@ -31,6 +31,19 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
+
+		<!-- Spring Security -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+		<groupId>com.auth0</groupId>
+		<artifactId>java-jwt</artifactId>
+		<version>4.4.0</version>
+		</dependency>
+		
 		<!-- Starter principal do Spring Boot para aplicações web -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
