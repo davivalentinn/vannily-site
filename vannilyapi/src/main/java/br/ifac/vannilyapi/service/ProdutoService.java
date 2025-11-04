@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import br.ifac.vannilyapi.model.Produto;
 import br.ifac.vannilyapi.repository.ProdutoRepository;
@@ -19,24 +18,24 @@ public class ProdutoService implements ICrudService<Produto>, IPageService<Produ
         this.repo = repo;
     }
 
+    private String normalizar(String valor) {
+        return (valor == null || valor.isBlank()) ? null : valor.trim();
+    }
+
     @Override
     public List<Produto> consultar(String termoBusca) {
-        // Retorna todos se o termo de busca estiver vazio
-        if (termoBusca == null || termoBusca.isBlank()) {
+        termoBusca = normalizar(termoBusca);
+
+        if (termoBusca == null) {
             return repo.findAll();
         }
 
-        termoBusca = StringUtils.trimAllWhitespace(termoBusca);
-        // Usa a consulta personalizada que busca por nome ou categoria
         return repo.buscar(termoBusca, Pageable.unpaged()).getContent();
     }
 
     @Override
     public Page<Produto> consultar(String termoBusca, Pageable paginacao) {
-        termoBusca = (termoBusca == null || termoBusca.isBlank())
-                ? null
-                : StringUtils.trimAllWhitespace(termoBusca);
-
+        termoBusca = normalizar(termoBusca);
         return repo.buscar(termoBusca, paginacao);
     }
 
@@ -55,7 +54,6 @@ public class ProdutoService implements ICrudService<Produto>, IPageService<Produ
         repo.deleteById(id);
     }
 
-    // --- Métodos adicionais específicos de Produto ---
 
     public List<Produto> buscarPorCategoria(Long categoriaId) {
         return repo.buscarPorCategoria(categoriaId);
@@ -66,13 +64,18 @@ public class ProdutoService implements ICrudService<Produto>, IPageService<Produ
     }
 
     public List<Produto> buscarPorTemaOuGenero(String tema, String genero) {
-        if ((tema == null || tema.isBlank()) && (genero == null || genero.isBlank())) {
+        tema = normalizar(tema);
+        genero = normalizar(genero);
+
+        if (tema == null && genero == null) {
             return repo.findAll();
         }
 
-        tema = (tema == null || tema.isBlank()) ? null : StringUtils.trimAllWhitespace(tema);
-        genero = (genero == null || genero.isBlank()) ? null : StringUtils.trimAllWhitespace(genero);
-
         return repo.buscarPorTemaOuGenero(tema, genero);
     }
+
+    public boolean existePorId(Long id) {
+        return repo.existsById(id);
+    }
+
 }
