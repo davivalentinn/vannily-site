@@ -14,7 +14,7 @@ export function Favorites() {
           <div className="flex justify-between items-center p-2 border-b border-gray-200 rounded-t-md">
             <div className="flex items-center">
               <div className="w-10 h-10 border-[3px] border-[#353535] rounded-full flex justify-center items-center ml-6">
-                <i className="ri-user-3-line text-[24px] text-[#353535]"></i>
+                <i className="ri-user-3-line text-[30px] text-[#353535]"></i>
               </div>
               <button className="ml-2 border border-black rounded-md px-3 py-1 font-medium text-[14px] bg-white hover:bg-gray-100 transition">
                 + Convidar
@@ -27,18 +27,18 @@ export function Favorites() {
 
           {/* Barra inferior */}
           <div className="border-b border-gray-200">
-            <div className="w-full h-2 bg-background"></div>
+            <div className="w-full h-1 bg-background"></div>
             <div className="flex justify-between items-center py-2 px-6">
-              <div className="flex items-center gap-3 text-[24px] text-[#353535]">
-                <i className="ri-grid-fill cursor-pointer"></i>
-                <i className="ri-menu-line cursor-pointer"></i>
+              <div className="flex items-center gap-3 text-[24px] px-4 text-[#353535]">
+                <i className="ri-grid-fill text-[#353535] text-[24px] cursor-pointer"></i>
+                <i className="ri-menu-line text-[#353535] text-[24px] cursor-pointer"></i>
               </div>
               <div className="flex items-center">
-                <i className="ri-search-line text-[#353535] text-[20px] mr-2"></i>
+                <i className="ri-search-line text-[#353535] text-[20px] mr-2 cursor-pointer"></i>
                 <input
                   type="text"
                   placeholder="Buscar nos Favoritos"
-                  className="border border-black rounded-md px-3 py-1 text-[14px] font-medium focus:outline-none"
+                  className="border border-black w-80 rounded-md px-3 py-1 text-[14px] font-medium focus:outline-none"
                 />
               </div>
             </div>
@@ -52,7 +52,7 @@ export function Favorites() {
                 <input
                   type="checkbox"
                   defaultChecked
-                  className="w-[18px] h-[18px] accent-[#8B1689] border-2 border-[#8B1689] rounded-md mt-2 cursor-pointer"
+                  className="w-[18px] h-[18px] accent-[#8B1689] border-2 border-[#8B1689] rounded-md cursor-pointer self-center ml-1"
                 />
                 <div className="bg-[#D7D7D7] w-[120px] h-[210px] rounded-md flex justify-center items-center ml-3">
                   <img
@@ -89,8 +89,8 @@ export function Favorites() {
 
               {/* Botões à direita */}
               <div className="flex items-center">
-                <button className="border-2 border-[#8B1689] text-[#8B1689] font-semibold rounded-md px-4 py-1 text-[14px] hover:bg-[#8B1689] hover:text-white transition">
-                  <i className="ri-shopping-cart-2-line mr-1"></i> Adicionar ao carrinho
+                <button className="border-2 border-[#8B1689] text-background font-semibold rounded-md px-4 py-1 text-[14px] hover:bg-[#8B1689] hover:text-white transition">
+                  <i className="ri-shopping-cart-2-line mr-1 text-background"></i> Adicionar ao carrinho
                 </button>
                 <i className="ri-heart-fill text-[#8B1689] text-[24px] ml-3 cursor-pointer"></i>
               </div>
@@ -102,7 +102,7 @@ export function Favorites() {
                 <input
                   type="checkbox"
                   defaultChecked
-                  className="w-[18px] h-[18px] accent-[#8B1689] border-2 border-[#8B1689] rounded-md mt-2 cursor-pointer"
+                  className="w-[18px] h-[18px] accent-[#8B1689] border-2 border-[#8B1689] rounded-md cursor-pointer self-center ml-1"
                 />
                 <div className="bg-[#D7D7D7] w-[120px] h-[210px] rounded-md flex justify-center items-center ml-3">
                   <img
@@ -138,9 +138,9 @@ export function Favorites() {
               </div>
 
               {/* Botões à direita */}
-              <div className="flex items-center">
+              <div className="flex items-center justify-end items-end">
                 <button className="border-2 border-[#8B1689] text-[#8B1689] font-semibold rounded-md px-4 py-1 text-[14px] hover:bg-[#8B1689] hover:text-white transition">
-                  <i className="ri-shopping-cart-2-line mr-1"></i> Adicionar ao carrinho
+                  <i className="ri-shopping-cart-2-line mr-1 text-background"></i> Adicionar ao carrinho
                 </button>
                 <i className="ri-heart-fill text-[#8B1689] text-[24px] ml-3 cursor-pointer"></i>
               </div>
