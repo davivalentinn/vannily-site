@@ -15,12 +15,15 @@ public class FiltroCors {
     CorsFilter corsFilter() {
         var config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(Arrays.asList("http://127.0.0.1:5500", "http://localhost:4200"));
+        config.setAllowedOrigins(Arrays.asList(
+            "http://127.0.0.1:5500",
+                "http://localhost:4200",
+                "http://localhost:3000"));
         config.setAllowedMethods(Arrays.asList("*"));
         config.setAllowedHeaders(Arrays.asList("*"));
         var source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
-    
+
 }
