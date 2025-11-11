@@ -100,7 +100,7 @@ VALUES
 (40, 40, 'Aventura', 'Infantil', 2, 'Livre', '30min', 'Cartas', 'Pequeno', 'Papel', 'Cartas', 25, TRUE, 0, NULL, NULL, NULL, 'Fácil', TRUE);
 
 -- Usuário
-INSERT INTO usuario (nome, numeroTelefone, email, usuario, senha, tipoUsuario, dataCriacao) VALUES
+INSERT INTO usuario (nome, numero_telefone, email, usuario, senha, tipo_usuario, data_criacao) VALUES
 ('Administrador do Sistema', '11999990000', 'admin@vannily.com', 'admin', 'admin123', 'ADMIN', NOW()),
 ('Elyvan Teste', '11988887777', 'elyvan@vannily.com', 'elyvan', 'senha123', 'USER', NOW()),
 ('Cliente Demo', '11977776666', 'cliente@vannily.com', 'cliente', 'cliente123', 'USER', NOW());
