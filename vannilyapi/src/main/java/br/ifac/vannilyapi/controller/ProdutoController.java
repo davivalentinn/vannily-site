@@ -13,7 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import br.ifac.vannilyapi.dto.ProdutoDto;
+import br.ifac.vannilyapi.dto.ProdutoCreateDto;
 import br.ifac.vannilyapi.mapper.ProdutoMapper;
 import br.ifac.vannilyapi.service.ProdutoService;
 
@@ -30,14 +30,14 @@ public class ProdutoController {
     }
 
     @GetMapping("/consultar")
-    public ResponseEntity<List<ProdutoDto>> consultar(@RequestParam(required = false) String termoBusca) {
+    public ResponseEntity<List<ProdutoCreateDto>> consultar(@RequestParam(required = false) String termoBusca) {
         var registros = service.consultar(termoBusca);
         var dtos = registros.stream().map(mapper::toDto).toList();
         return ResponseEntity.ok(dtos);
     }
 
     @GetMapping(value = "/consultar", params = "page")
-    public ResponseEntity<Page<ProdutoDto>> consultar(
+    public ResponseEntity<Page<ProdutoCreateDto>> consultar(
         @RequestParam(required = false) String termoBusca,
         @SortDefault(sort = "nome", direction = Sort.Direction.ASC)
         @ParameterObject Pageable paginacao
@@ -48,7 +48,7 @@ public class ProdutoController {
     }
 
     @GetMapping("/consultar/{id}")
-    public ResponseEntity<ProdutoDto> consultar(@PathVariable Long id) {
+    public ResponseEntity<ProdutoCreateDto> consultar(@PathVariable Long id) {
         var registro = service.consultar(id);
         if (registro == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(mapper.toDto(registro));
@@ -57,7 +57,7 @@ public class ProdutoController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = "/inserir", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Long> inserir(
-        @RequestBody @Validated ProdutoDto dto
+        @RequestBody @Validated ProdutoCreateDto dto
     ) {
         var entity = mapper.toEntity(dto);
         var salvo = service.salvar(entity);
@@ -67,7 +67,7 @@ public class ProdutoController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/atualizar")
     public ResponseEntity<Void> atualizar(
-        @RequestBody @Validated ProdutoDto dto
+        @RequestBody @Validated ProdutoCreateDto dto
     ) {
         var entity = mapper.toEntity(dto);
         service.salvar(entity);
@@ -83,20 +83,20 @@ public class ProdutoController {
     }
 
     @GetMapping("/categoria/{categoriaId}")
-    public ResponseEntity<List<ProdutoDto>> buscarPorCategoria(@PathVariable Long categoriaId) {
+    public ResponseEntity<List<ProdutoCreateDto>> buscarPorCategoria(@PathVariable Long categoriaId) {
         var registros = service.buscarPorCategoria(categoriaId);
         var dtos = registros.stream().map(mapper::toDto).toList();
         return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/promocoes")
-    public ResponseEntity<List<ProdutoDto>> buscarPromocoes() {
+    public ResponseEntity<List<ProdutoCreateDto>> buscarPromocoes() {
         var registros = service.buscarPromocoes();
         return ResponseEntity.ok(registros.stream().map(mapper::toDto).toList());
     }
 
     @GetMapping("/filtrar")
-    public ResponseEntity<List<ProdutoDto>> filtrar(
+    public ResponseEntity<List<ProdutoCreateDto>> filtrar(
         @RequestParam(required = false) String tema,
         @RequestParam(required = false) String genero
     ) {
