@@ -8,7 +8,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import br.ifac.vannilyapi.model.ProdutoJogo;
+import br.ifac.vannilyapi.dto.ProdutoJogoCreateDto;
+import br.ifac.vannilyapi.dto.ProdutoJogoGetDto;
+import br.ifac.vannilyapi.dto.ProdutoJogoUpdateDto;
+import br.ifac.vannilyapi.mapper.ProdutoJogoMapper;
 import br.ifac.vannilyapi.service.ProdutoJogoService;
 
 @RestController
@@ -16,36 +19,40 @@ import br.ifac.vannilyapi.service.ProdutoJogoService;
 public class ProdutoJogoController {
 
     private final ProdutoJogoService servico;
+    private final ProdutoJogoMapper mapper;
 
-    public ProdutoJogoController(ProdutoJogoService servico) {
+    public ProdutoJogoController(ProdutoJogoService servico, ProdutoJogoMapper mapper) {
         this.servico = servico;
+        this.mapper = mapper;
     }
 
-    @GetMapping(value = "/consultar", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ProdutoJogo>> consultar(@RequestParam(required = false) String termoBusca) {
-        List<ProdutoJogo> registros = servico.consultar(termoBusca);
-        return ResponseEntity.ok(registros);
+    @GetMapping("/consultar")
+    public ResponseEntity<List<ProdutoJogoGetDto>> consultar(@RequestParam(required = false) String termoBusca) {
+        var registros = servico.consultar(termoBusca);
+        var dtos = registros.stream().map(mapper::toGetDto).toList();
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/consultar/{id}")
-    public ResponseEntity<ProdutoJogo> consultarPorId(@PathVariable Long id) {
-        ProdutoJogo registro = servico.consultar(id);
-        if (registro == null) {
+    public ResponseEntity<ProdutoJogoGetDto> consultarPorId(@PathVariable Long id) {
+        var registro = servico.consultar(id);
+        if (registro == null)
             return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(registro);
-    }
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(value = "/inserir", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<Long> inserir(@RequestBody @Validated ProdutoJogo produtoJogo) {
-        ProdutoJogo registro = servico.salvar(produtoJogo);
-        return ResponseEntity.created(null).body(registro.getId());
+        return ResponseEntity.ok(mapper.toGetDto(registro));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping(value = "/atualizar", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<Void> atualizar(@RequestBody @Validated ProdutoJogo produtoJogo) {
-        servico.salvar(produtoJogo);
+    @PostMapping("/inserir")
+    public ResponseEntity<Long> inserir(@RequestBody @Validated ProdutoJogoCreateDto dto) {
+        var entidade = mapper.toEntity(dto);
+        var salvo = servico.salvar(entidade);
+        return ResponseEntity.created(null).body(salvo.getId());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/atualizar")
+    public ResponseEntity<Void> atualizar(@RequestBody @Validated ProdutoJogoUpdateDto dto) {
+        servico.salvar(mapper.toEntity(dto));
         return ResponseEntity.ok().build();
     }
 
@@ -58,17 +65,17 @@ public class ProdutoJogoController {
 
     // Buscar por produto pai
     @GetMapping(value = "/produto/{produtoId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ProdutoJogo>> buscarPorProduto(@PathVariable Long produtoId) {
-        List<ProdutoJogo> registros = servico.buscarPorProduto(produtoId);
-        return ResponseEntity.ok(registros);
+    public ResponseEntity<List<ProdutoJogoGetDto>> buscarPorProduto(@PathVariable Long produtoId) {
+        var registros = servico.buscarPorProduto(produtoId);
+        return ResponseEntity.ok(registros.stream().map(mapper::toGetDto).toList());
     }
 
     // Filtrar por tema ou gênero
-    @GetMapping(value = "/filtrar", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ProdutoJogo>> filtrar(
+    @GetMapping("/filtrar")
+    public ResponseEntity<List<ProdutoJogoGetDto>> filtrar(
             @RequestParam(required = false) String tema,
             @RequestParam(required = false) String genero) {
-        List<ProdutoJogo> registros = servico.buscarPorTemaOuGenero(tema, genero);
-        return ResponseEntity.ok(registros);
+        var registros = servico.buscarPorTemaOuGenero(tema, genero);
+        return ResponseEntity.ok(registros.stream().map(mapper::toGetDto).toList());
     }
 }
