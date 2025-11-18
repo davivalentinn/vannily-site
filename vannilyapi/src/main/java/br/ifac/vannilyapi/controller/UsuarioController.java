@@ -8,7 +8,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import br.ifac.vannilyapi.model.Usuario;
+import br.ifac.vannilyapi.dto.UsuarioCreateDto;
+import br.ifac.vannilyapi.dto.UsuarioGetDto;
+import br.ifac.vannilyapi.dto.UsuarioUpdateDto;
+import br.ifac.vannilyapi.mapper.UsuarioMapper;
 import br.ifac.vannilyapi.service.UsuarioService;
 
 @RestController
@@ -17,35 +20,38 @@ import br.ifac.vannilyapi.service.UsuarioService;
 public class UsuarioController {
 
     private final UsuarioService servico;
+    private final UsuarioMapper mapper;
 
-    public UsuarioController(UsuarioService servico) {
+     public UsuarioController(UsuarioService servico, UsuarioMapper mapper) {
         this.servico = servico;
+        this.mapper = mapper;
     }
 
-    @GetMapping(value = "/consultar", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Usuario>> consultar(@RequestParam(required = false) String termoBusca) {
-        List<Usuario> registros = servico.consultar(termoBusca);
-        return ResponseEntity.ok(registros);
+    @GetMapping("/consultar")
+    public ResponseEntity<List<UsuarioGetDto>> consultar(@RequestParam(required = false) String termoBusca) {
+        var registros = servico.consultar(termoBusca);
+        var dtos = registros.stream().map(mapper::toResponseDto).toList();
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/consultar/{id}")
-    public ResponseEntity<Usuario> consultarPorId(@PathVariable Long id) {
-        Usuario registro = servico.consultar(id);
-        if (registro == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(registro);
+    public ResponseEntity<UsuarioGetDto> consultarPorId(@PathVariable Long id) {
+        var registro = servico.consultar(id);
+        if (registro == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(mapper.toResponseDto(registro));
     }
 
-    @PostMapping(value = "/inserir", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<Long> inserir(@RequestBody @Validated Usuario usuario) {
-        Usuario registro = servico.salvar(usuario);
-        return ResponseEntity.created(null).body(registro.getId());
+    @PostMapping("/inserir")
+    public ResponseEntity<Long> inserir(@Validated @RequestBody UsuarioCreateDto dto) {
+        var entity = mapper.toEntity(dto);
+        var salvo = servico.salvar(entity);
+        return ResponseEntity.status(201).body(salvo.getId());
     }
 
-    @PutMapping(value = "/atualizar", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<Void> atualizar(@RequestBody @Validated Usuario usuario) {
-        servico.salvar(usuario);
+    @PutMapping("/atualizar")
+    public ResponseEntity<Void> atualizar(@Validated @RequestBody UsuarioUpdateDto dto) {
+        var entity = mapper.toEntity(dto);
+        servico.salvar(entity);
         return ResponseEntity.ok().build();
     }
 
@@ -55,22 +61,18 @@ public class UsuarioController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/buscar-usuario", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Usuario> buscarPorUsuario(@RequestParam String usuario) {
-        Usuario registro = servico.buscarPorUsuario(usuario);
-        if (registro == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(registro);
+    @GetMapping("/buscar-usuario")
+    public ResponseEntity<UsuarioGetDto> buscarPorUsuario(@RequestParam String usuario) {
+        var registro = servico.buscarPorUsuario(usuario);
+        if (registro == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(mapper.toResponseDto(registro));
     }
 
-    @GetMapping(value = "/buscar-email", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Usuario> buscarPorEmail(@RequestParam String email) {
-        Usuario registro = servico.buscarPorEmail(email);
-        if (registro == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(registro);
+    @GetMapping("/buscar-email")
+    public ResponseEntity<UsuarioGetDto> buscarPorEmail(@RequestParam String email) {
+        var registro = servico.buscarPorEmail(email);
+        if (registro == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(mapper.toResponseDto(registro));
     }
 
     @GetMapping(value = "/existe-email", produces = MediaType.APPLICATION_JSON_VALUE)

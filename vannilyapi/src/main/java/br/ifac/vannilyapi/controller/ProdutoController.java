@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import br.ifac.vannilyapi.dto.ProdutoCreateDto;
+import br.ifac.vannilyapi.dto.ProdutoGetDto;
 import br.ifac.vannilyapi.mapper.ProdutoMapper;
 import br.ifac.vannilyapi.service.ProdutoService;
 
@@ -30,28 +31,28 @@ public class ProdutoController {
     }
 
     @GetMapping("/consultar")
-    public ResponseEntity<List<ProdutoCreateDto>> consultar(@RequestParam(required = false) String termoBusca) {
+        public ResponseEntity<List<ProdutoGetDto>> consultar(@RequestParam(required = false) String termoBusca) {
         var registros = service.consultar(termoBusca);
-        var dtos = registros.stream().map(mapper::toDto).toList();
+        var dtos = registros.stream().map(mapper::toGetDto).toList();
         return ResponseEntity.ok(dtos);
     }
 
     @GetMapping(value = "/consultar", params = "page")
-    public ResponseEntity<Page<ProdutoCreateDto>> consultar(
+    public ResponseEntity<Page<ProdutoGetDto>> consultar(
         @RequestParam(required = false) String termoBusca,
         @SortDefault(sort = "nome", direction = Sort.Direction.ASC)
         @ParameterObject Pageable paginacao
     ) {
         var page = service.consultar(termoBusca, paginacao);
-        var dtos = page.map(mapper::toDto);
+        var dtos = page.map(mapper::toGetDto);
         return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/consultar/{id}")
-    public ResponseEntity<ProdutoCreateDto> consultar(@PathVariable Long id) {
+    public ResponseEntity<ProdutoGetDto> consultar(@PathVariable Long id) {
         var registro = service.consultar(id);
         if (registro == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(mapper.toDto(registro));
+        return ResponseEntity.ok(mapper.toGetDto(registro));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -83,24 +84,24 @@ public class ProdutoController {
     }
 
     @GetMapping("/categoria/{categoriaId}")
-    public ResponseEntity<List<ProdutoCreateDto>> buscarPorCategoria(@PathVariable Long categoriaId) {
+    public ResponseEntity<List<ProdutoGetDto>> buscarPorCategoria(@PathVariable Long categoriaId) {
         var registros = service.buscarPorCategoria(categoriaId);
-        var dtos = registros.stream().map(mapper::toDto).toList();
+        var dtos = registros.stream().map(mapper::toGetDto).toList();
         return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/promocoes")
-    public ResponseEntity<List<ProdutoCreateDto>> buscarPromocoes() {
+    public ResponseEntity<List<ProdutoGetDto>> buscarPromocoes() {
         var registros = service.buscarPromocoes();
-        return ResponseEntity.ok(registros.stream().map(mapper::toDto).toList());
+        return ResponseEntity.ok(registros.stream().map(mapper::toGetDto).toList());
     }
 
     @GetMapping("/filtrar")
-    public ResponseEntity<List<ProdutoCreateDto>> filtrar(
+    public ResponseEntity<List<ProdutoGetDto>> filtrar(
         @RequestParam(required = false) String tema,
         @RequestParam(required = false) String genero
     ) {
         var registros = service.buscarPorTemaOuGenero(tema, genero);
-        return ResponseEntity.ok(registros.stream().map(mapper::toDto).toList());
+        return ResponseEntity.ok(registros.stream().map(mapper::toGetDto).toList());
     }
 }

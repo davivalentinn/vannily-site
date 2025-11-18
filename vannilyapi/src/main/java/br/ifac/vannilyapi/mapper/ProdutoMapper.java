@@ -19,6 +19,6 @@ public interface ProdutoMapper {
     Produto toEntity(ProdutoCreateDto dto);
 
     @Mapping(source = "categoria.nome", target = "categoriaNome")
-    ProdutoGetDto toResponseDto(Produto produto);
+    ProdutoGetDto toGetDto(Produto produto);
 }
 
