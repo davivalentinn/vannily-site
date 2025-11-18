@@ -7,6 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import br.ifac.vannilyapi.dto.EnderecoCreateDto;
+import br.ifac.vannilyapi.dto.EnderecoGetDto;
+import br.ifac.vannilyapi.dto.EnderecoUpdateDto;
+import br.ifac.vannilyapi.mapper.EnderecoMapper;
 import br.ifac.vannilyapi.model.Endereco;
 import br.ifac.vannilyapi.service.EnderecoService;
 
@@ -15,35 +19,39 @@ import br.ifac.vannilyapi.service.EnderecoService;
 public class EnderecoController {
 
     private final EnderecoService servico;
+    private final EnderecoMapper mapper;
 
-    public EnderecoController(EnderecoService servico) {
+    public EnderecoController(EnderecoService servico, EnderecoMapper mapper) {
         this.servico = servico;
+        this.mapper = mapper;
     }
 
-    @GetMapping(value = "/consultar", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Endereco>> consultar(@RequestParam(required = false) String termoBusca) {
-        List<Endereco> registros = servico.consultar(termoBusca);
-        return ResponseEntity.ok(registros);
+    @GetMapping("/consultar")
+    public ResponseEntity<List<EnderecoGetDto>> consultar(@RequestParam(required = false) String termoBusca) {
+        var registros = servico.consultar(termoBusca);
+        var dtos = registros.stream().map(mapper::toResponseDto).toList();
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/consultar/{id}")
-    public ResponseEntity<Endereco> consultarPorId(@PathVariable Long id) {
-        Endereco registro = servico.consultar(id);
-        if (registro == null) {
+    public ResponseEntity<EnderecoGetDto> consultarPorId(@PathVariable Long id) {
+        var registro = servico.consultar(id);
+        if (registro == null)
             return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(registro);
+        return ResponseEntity.ok(mapper.toResponseDto(registro));
     }
 
-    @PostMapping(value = "/inserir", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<Long> inserir(@RequestBody @Validated Endereco endereco) {
-        Endereco registro = servico.salvar(endereco);
+    @PostMapping("/inserir")
+    public ResponseEntity<Long> inserir(@RequestBody @Validated EnderecoCreateDto dto) {
+        var entidade = mapper.toEntity(dto);
+        var registro = servico.salvar(entidade);
         return ResponseEntity.created(null).body(registro.getId());
     }
 
-    @PutMapping(value = "/atualizar", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<Void> atualizar(@RequestBody @Validated Endereco endereco) {
-        servico.salvar(endereco);
+    @PutMapping("/atualizar")
+    public ResponseEntity<Void> atualizar(@RequestBody @Validated EnderecoUpdateDto dto) {
+        var entidade = mapper.toEntity(dto);
+        servico.salvar(entidade);
         return ResponseEntity.ok().build();
     }
 
@@ -53,18 +61,23 @@ public class EnderecoController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/usuario/{usuarioId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Endereco>> buscarPorUsuario(@PathVariable Long usuarioId) {
-        List<Endereco> registros = servico.buscarPorUsuario(usuarioId);
-        return ResponseEntity.ok(registros);
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<EnderecoGetDto>> buscarPorUsuario(@PathVariable Long usuarioId) {
+        var registros = servico.buscarPorUsuario(usuarioId);
+        var dtos = registros.stream().map(mapper::toResponseDto).toList();
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping(value = "/filtrar", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Endereco>> filtrar(
+    public ResponseEntity<List<EnderecoGetDto>> filtrar(
             @RequestParam(required = false) String cidade,
             @RequestParam(required = false) String estado,
             @RequestParam(required = false) String pais) {
+
         List<Endereco> registros = servico.buscarPorCidadeEstadoOuPais(cidade, estado, pais);
-        return ResponseEntity.ok(registros);
+        List<EnderecoGetDto> dtos = registros.stream().map(mapper::toResponseDto).toList();
+
+        return ResponseEntity.ok(dtos);
     }
+
 }
