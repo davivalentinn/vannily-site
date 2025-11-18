@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ import br.ifac.vannilyapi.model.Usuario;
 import br.ifac.vannilyapi.service.UsuarioService;
 
 @RestController
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/usuarios")
 public class UsuarioController {
 

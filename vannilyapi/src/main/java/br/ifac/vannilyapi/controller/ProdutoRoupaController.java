@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,19 +35,20 @@ public class ProdutoRoupaController {
         }
         return ResponseEntity.ok(registro);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = "/inserir", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<Long> inserir(@RequestBody @Validated ProdutoRoupa produtoRoupa) {
         ProdutoRoupa registro = servico.salvar(produtoRoupa);
         return ResponseEntity.created(null).body(registro.getId());
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/atualizar", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<Void> atualizar(@RequestBody @Validated ProdutoRoupa produtoRoupa) {
         servico.salvar(produtoRoupa);
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/remover/{id}", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<Void> remover(@PathVariable Long id) {
         servico.remover(id);

@@ -29,7 +29,6 @@ public class ProdutoController {
         this.mapper = mapper;
     }
 
-    // ✅ Consultar sem paginação
     @GetMapping("/consultar")
     public ResponseEntity<List<ProdutoDto>> consultar(@RequestParam(required = false) String termoBusca) {
         var registros = service.consultar(termoBusca);
@@ -37,7 +36,6 @@ public class ProdutoController {
         return ResponseEntity.ok(dtos);
     }
 
-    // ✅ Consultar com paginação
     @GetMapping(value = "/consultar", params = "page")
     public ResponseEntity<Page<ProdutoDto>> consultar(
         @RequestParam(required = false) String termoBusca,
@@ -49,7 +47,6 @@ public class ProdutoController {
         return ResponseEntity.ok(dtos);
     }
 
-    // ✅ Consultar por ID
     @GetMapping("/consultar/{id}")
     public ResponseEntity<ProdutoDto> consultar(@PathVariable Long id) {
         var registro = service.consultar(id);
