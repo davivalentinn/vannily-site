@@ -74,7 +74,7 @@ export function Favorites() {
 
                   <div className="flex items-center border-2 border-[#333] rounded-md h-[35px] w-[120px] mt-2 justify-center gap-3">
                     <button className="font-extrabold">-</button>
-                    <span className="font-extrabold">1</span>
+                    <span className="font-extrabold p-4">1</span>
                     <button className="font-extrabold">+</button>
                   </div>
 
@@ -95,7 +95,6 @@ export function Favorites() {
                 <label className="cursor-pointer">
                   <input
                   type="checkbox"
-                  defaultChecked
                   className="peer hidden"/>
                   <i className="ri-heart-fill text-[24px] text-[#8B1689] peer-checked:text-gray-400 transition-colors ml-3"></i>
                   </label>
@@ -130,7 +129,7 @@ export function Favorites() {
 
                   <div className="flex items-center border-2 border-[#333] rounded-md h-[35px] w-[120px] mt-2 justify-center gap-3">
                     <button className="font-extrabold">-</button>
-                    <span className="font-extrabold">1</span>
+                    <span className="font-extrabold p-4">1</span>
                     <button className="font-extrabold">+</button>
                   </div>
 
@@ -148,7 +147,12 @@ export function Favorites() {
                 <button className="border-2 border-[#8B1689] text-[#8B1689] font-semibold rounded-md px-4 py-1 text-[14px] hover:bg-[#8B1689] hover:text-white transition">
                   <i className="ri-shopping-cart-2-line mr-1 text-background"></i> Adicionar ao carrinho
                 </button>
-                <i className="ri-heart-fill text-[#8B1689] text-[24px] ml-3 cursor-pointer"></i>
+                <label className="cursor-pointer">
+                  <input
+                  type="checkbox"
+                  className="peer hidden"/>
+                  <i className="ri-heart-fill text-[24px] text-[#8B1689] peer-checked:text-gray-400 transition-colors ml-3"></i>
+                  </label>
               </div>
             </div>
           </div>
