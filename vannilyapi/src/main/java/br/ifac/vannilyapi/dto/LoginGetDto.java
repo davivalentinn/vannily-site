@@ -1,8 +1,11 @@
 package br.ifac.vannilyapi.dto;
 
+import br.ifac.vannilyapi.model.TipoUsuario;
+
 public record LoginGetDto(
     String token,
     String email,
-    String role
+    String nome,
+    TipoUsuario tipoUsuario
 ) {}
 

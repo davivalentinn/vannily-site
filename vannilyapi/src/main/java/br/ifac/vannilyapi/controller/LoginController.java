@@ -10,6 +10,7 @@ import br.ifac.vannilyapi.config.TokenService;
 import br.ifac.vannilyapi.dto.LoginGetDto;
 import br.ifac.vannilyapi.model.Usuario;
 import br.ifac.vannilyapi.service.UsuarioService;
+import br.ifac.vannilyapi.model.TipoUsuario;
 
 @RestController
 @RequestMapping("/login")
@@ -23,7 +24,6 @@ public class LoginController {
             AuthenticationManager authManager,
             UsuarioService usuarioService,
             TokenService tokenService) {
-
         this.authManager = authManager;
         this.usuarioService = usuarioService;
         this.tokenService = tokenService;
@@ -32,23 +32,24 @@ public class LoginController {
     @PostMapping("/autenticar")
     public ResponseEntity<LoginGetDto> autenticar(@RequestBody Usuario usuario) {
 
-        var loginToken = new UsernamePasswordAuthenticationToken(
+        var authenticationToken = new UsernamePasswordAuthenticationToken(
                 usuario.getEmail(),
-                usuario.getSenha());
-        var autenticacao = authManager.authenticate(loginToken);
-
+                usuario.getSenha()
+        );
+        
+        var autenticacao = authManager.authenticate(authenticationToken);
         var principal = (PerfilUsuario) autenticacao.getPrincipal();
 
         var usuarioAutenticado = usuarioService.buscarPorEmail(principal.getUsername());
-
         var token = tokenService.criarToken(usuarioAutenticado);
 
         var dto = new LoginGetDto(
                 token,
                 usuarioAutenticado.getEmail(),
-                usuarioAutenticado.getNome());
+                usuarioAutenticado.getNome(),
+                usuarioAutenticado.getTipoUsuario()
+        );
 
         return ResponseEntity.ok(dto);
     }
-
 }

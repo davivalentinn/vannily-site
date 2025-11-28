@@ -8,7 +8,8 @@ interface LoginRequest {
 interface LoginResponse {
   token: string;
   email: string;
-  role: string;
+  tipo_usuario: string;
+  nome: string;
 }
 
 export async function login(data: LoginRequest): Promise<LoginResponse> {
@@ -16,7 +17,9 @@ export async function login(data: LoginRequest): Promise<LoginResponse> {
 
   localStorage.setItem("token", response.data.token);
   localStorage.setItem("email", response.data.email);
-  localStorage.setItem("role", response.data.role);
+  localStorage.setItem("tipo_usuario", response.data.tipo_usuario);
+  localStorage.setItem("usuario", response.data.nome);
+  console.log("LOGIN RESPONSE:", response.data);
 
   return response.data;
 }
@@ -24,5 +27,6 @@ export async function login(data: LoginRequest): Promise<LoginResponse> {
 export function logout() {
   localStorage.removeItem("token");
   localStorage.removeItem("email");
-  localStorage.removeItem("role");
+  localStorage.removeItem("tipo_usuario");
+  localStorage.removeItem("nome");
 }
