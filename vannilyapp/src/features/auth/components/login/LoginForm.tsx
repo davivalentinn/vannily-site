@@ -1,26 +1,41 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { login } from "../../../../services/login-service";
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginForm() {
     const [formData, setFormData] = useState({
         userOrEmail: '',
         password: ''
     });
+    const navigate = useNavigate();
+
     const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (field: string, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 
-    const handleSubmit = () => {
-        if (!formData.userOrEmail || !formData.password) {
-            alert('Por favor, preencha todos os campos!');
-            return;
-        }
+    const handleSubmit = async () => {
+  if (!formData.userOrEmail || !formData.password) {
+    alert("Por favor, preencha todos os campos!");
+    return;
+  }
 
-        console.log('Dados de login:', formData);
-        alert('Login realizado com sucesso!');
-    };
+  try {
+    const response = await login({
+      email: formData.userOrEmail,
+      senha: formData.password,
+    });
+
+    console.log("Autenticado:", response);
+    alert("Login realizado com sucesso!")
+    navigate("/");
+  } catch (error) {
+    console.error("Erro no login", error);
+    alert("Email ou senha inválidos");
+  }
+};
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') {
