@@ -11,6 +11,7 @@ export default {
         button: '#8B1689',
         background: '#8B1689',
         bar: '#CA2BC7',
+        productCarousel: "#e83cff"
       },
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],

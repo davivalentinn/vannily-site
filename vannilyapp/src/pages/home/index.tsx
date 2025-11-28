@@ -1,11 +1,16 @@
 import { Carousel } from "../../components/Carousel"
+import ProductCarousel from "../../components/ProductCarousel/ProductCarousel"
 export function Home() {
     return (
         <>
             <Carousel />
-            <main className="w-full max-w-7xl flex gap-4 justify-center items-center m-auto">
             
-            </main>
+
+
+            <ProductCarousel/>
+
+
+          
 
         </>
     )
