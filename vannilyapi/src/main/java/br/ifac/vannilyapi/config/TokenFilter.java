@@ -2,9 +2,10 @@ package br.ifac.vannilyapi.config;
 
 import java.io.IOException;
 
-import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -17,38 +18,48 @@ import jakarta.servlet.http.HttpServletResponse;
 public class TokenFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
-    private final PerfilUsuarioService perfilUsuarioService;
+    private final UserDetailsService userDetailsService;
 
-    public TokenFilter(TokenService tokenService, PerfilUsuarioService perfilUsuarioService) {
-    this.tokenService = tokenService;
-    this.perfilUsuarioService  = perfilUsuarioService;
-}
-
-
-
-    private String recuperarToken(HttpServletRequest request) {
-        var cabecalho = request.getHeader("Authorization");
-        if (cabecalho == null || !cabecalho.startsWith("Bearer ")) {
-            return null;
-        }
-        return cabecalho.replace("Bearer ", "");
+    public TokenFilter(TokenService tokenService, UserDetailsService userDetailsService) {
+        this.tokenService = tokenService;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        
+        // IMPORTANTE: Pular o filtro para rotas públicas
+        String path = request.getRequestURI();
+        if (path.equals("/login/autenticar")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-        var token = this.recuperarToken(request);
+        String token = recuperarToken(request);
+
         if (token != null) {
-            var login = tokenService.validarToken(token);
-            var usuario = perfilUsuarioService.loadUserByUsername(login);
-
-            if (login != null) {
-                var tokenAutenticacao = new UsernamePasswordAuthenticationToken(usuario, null,
-                        usuario.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(tokenAutenticacao);
+            String email = tokenService.validarToken(token);
+            
+            if (email != null) {
+                UserDetails user = userDetailsService.loadUserByUsername(email);
+                var authentication = new UsernamePasswordAuthenticationToken(
+                    user, 
+                    null, 
+                    user.getAuthorities()
+                );
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
+
         filterChain.doFilter(request, response);
+    }
+
+    private String recuperarToken(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
+        }
+        return null;
     }
 }

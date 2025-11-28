@@ -3,7 +3,9 @@ package br.ifac.vannilyapi.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import br.ifac.vannilyapi.dto.*;
+import br.ifac.vannilyapi.dto.EnderecoUpdateDto;
+import br.ifac.vannilyapi.dto.EnderecoGetDto;
+import br.ifac.vannilyapi.dto.EnderecoCreateDto;
 import br.ifac.vannilyapi.model.Endereco;
 
 @Mapper(componentModel = "spring")

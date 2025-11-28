@@ -32,7 +32,7 @@ public class TokenService {
             Algorithm algoritmo = Algorithm.HMAC256(secret);
 
             return JWT.create()
-                    .withIssuer("SCRP-API")
+                    .withIssuer("VANNILY-API")
                     .withSubject(usuario.getEmail())
                     .withClaim("id", usuario.getId())
                     .withClaim("nome", usuario.getNome())
