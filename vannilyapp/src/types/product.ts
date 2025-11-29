@@ -1,4 +1,3 @@
-
 export interface Product {
     id: number;
     title: string;
@@ -7,4 +6,11 @@ export interface Product {
     originalPrice: number;
     installments: string;
     image: string;
+    category: 'jogo' | 'acessorio' | 'roupa';
+    gameInfo?: {
+        minAge: string;
+        players: string;
+        duration: string;
+    };
+    discount?: number;
 }

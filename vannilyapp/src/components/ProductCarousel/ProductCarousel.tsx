@@ -1,7 +1,7 @@
 import { Heart, ChevronLeft, ChevronRight } from 'lucide-react';
 import React, { useState } from 'react';
-import { products } from './productData';
-import type { Product } from './types';
+import { products } from '../../data';
+import type { Product } from '../../types';
 import { Button, IconButton } from '../ui';
 import backgroundImage from '../../assets/images/background/carousel-bg.png';
 
@@ -36,7 +36,7 @@ const ProductCarousel: React.FC = () => {
             }}
         >
             {/* Overlay escuro para melhorar legibilidade */}
-            <div className="absolute inset-0 bg-black/90"></div>
+            <div className="absolute inset-0 bg-black/95"></div>
             
             {/* Container com scroll interno se necessário */}
             <div className="max-w-7xl mx-auto relative z-10 h-full flex items-center py-12 px-4 overflow-y-auto">
@@ -68,7 +68,7 @@ const ProductCarousel: React.FC = () => {
 
                             <div className="flex gap-4 pt-4">
                                 <IconButton
-                                    variant='favorited'
+                                    variant='danger'
                                     active={isFavorite}
                                     onClick={() => setIsFavorite(!isFavorite)}
                                     aria-label="Adicionar aos favoritos"

@@ -3,10 +3,11 @@ import { createBrowserRouter } from 'react-router-dom'
 
 //Importa páginas
 import { Home } from './pages/home';
-import { Cart }from './pages/cart'
+import { Cart } from './pages/cart'
 import { Favorites } from './pages/favorites';
 import { Login } from './pages/account/login';
 import { Register } from './pages/account/register';
+import { ProductPage } from './pages/product';
 //Fim Importa páginas
 
 //Importa Components
@@ -15,31 +16,35 @@ import { Layout } from './components/Layout';
 
 const router = createBrowserRouter([
   {
-    element: <Layout/>,
+    element: <Layout />,
     children: [
       {
         path: "/",
-        element: <Home/>
+        element: <Home />
       },
       {
         path: "/cart",
-        element: <Cart/>
+        element: <Cart />
       },
       {
         path: "/favorites",
-        element: <Favorites/>
+        element: <Favorites />
       },
       {
         path: "/account/register",
-        element: <Register/>
+        element: <Register />
       },
       {
         path: "/account/login",
-        element: <Login/>
+        element: <Login />
+      },
+      {
+        path: "/product/:id",
+        element: <ProductPage/>
       }
     ]
 
   }
 ])
 
-export {router}
+export { router }
