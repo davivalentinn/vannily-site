@@ -12,6 +12,7 @@ import { ProductPage } from './pages/product';
 
 //Importa Components
 import { Layout } from './components/Layout';
+import Profile from './pages/account/profile';
 //Fim Importa Components
 
 const router = createBrowserRouter([
@@ -39,9 +40,15 @@ const router = createBrowserRouter([
         element: <Login />
       },
       {
+<<<<<<< HEAD
         path: "/product/:id",
         element: <ProductPage/>
+=======
+        path: "/account/profile",
+        element: <Profile />
+>>>>>>> a05eafcb7a48e381795588d6c9f145a8358903cf
       }
+
     ]
 
   }
