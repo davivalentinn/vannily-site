@@ -1,21 +1,53 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
 import type { ReactNode } from "react";
 
 interface AuthContextProps {
   token: string | null;
   user: string | null;
-  setToken: (value: string | null) => void;
-  setUser: (value: string | null) => void;
+  isAuthenticated: boolean;
+  login: (token: string, user: string) => void;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  const [user, setUser] = useState(localStorage.getItem("usuario")); // pegar usuário salvo no localStorage
+  const [token, setTokenState] = useState<string | null>(() =>
+    localStorage.getItem("token")
+  );
+
+  const [user, setUserState] = useState<string | null>(() =>
+    localStorage.getItem("usuario")
+  );
+
+  // Sincronizar token com localStorage automaticamente
+  useEffect(() => {
+    if (token) localStorage.setItem("token", token);
+    else localStorage.removeItem("token");
+  }, [token]);
+
+  // Sincronizar usuário com localStorage automaticamente
+  useEffect(() => {
+    if (user) localStorage.setItem("usuario", user);
+    else localStorage.removeItem("usuario");
+  }, [user]);
+
+  const login = useCallback((newToken: string, newUser: string) => {
+    setTokenState(newToken);
+    setUserState(newUser);
+  }, []);
+
+  const logout = useCallback(() => {
+    setTokenState(null);
+    setUserState(null);
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuario");
+  }, []);
+
+  const isAuthenticated = !!token && !!user;
 
   return (
-    <AuthContext.Provider value={{ token, setToken, user, setUser }}>
+    <AuthContext.Provider value={{ token, user, isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

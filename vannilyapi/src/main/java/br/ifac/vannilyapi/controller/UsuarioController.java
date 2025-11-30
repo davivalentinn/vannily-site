@@ -15,7 +15,6 @@ import br.ifac.vannilyapi.mapper.UsuarioMapper;
 import br.ifac.vannilyapi.service.UsuarioService;
 
 @RestController
-@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
@@ -26,7 +25,7 @@ public class UsuarioController {
         this.servico = servico;
         this.mapper = mapper;
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/consultar")
     public ResponseEntity<List<UsuarioGetDto>> consultar(@RequestParam(required = false) String termoBusca) {
         var registros = servico.consultar(termoBusca);
@@ -34,6 +33,7 @@ public class UsuarioController {
         return ResponseEntity.ok(dtos);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/consultar/{id}")
     public ResponseEntity<UsuarioGetDto> consultarPorId(@PathVariable Long id) {
         var registro = servico.consultar(id);
@@ -48,6 +48,7 @@ public class UsuarioController {
         return ResponseEntity.status(201).body(salvo.getId());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/atualizar")
     public ResponseEntity<Void> atualizar(@Validated @RequestBody UsuarioUpdateDto dto) {
         var entity = mapper.toEntity(dto);
@@ -55,12 +56,14 @@ public class UsuarioController {
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/remover/{id}", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<Void> remover(@PathVariable Long id) {
         servico.remover(id);
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/buscar-usuario")
     public ResponseEntity<UsuarioGetDto> buscarPorUsuario(@RequestParam String usuario) {
         var registro = servico.buscarPorUsuario(usuario);
@@ -68,6 +71,7 @@ public class UsuarioController {
         return ResponseEntity.ok(mapper.toResponseDto(registro));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/buscar-email")
     public ResponseEntity<UsuarioGetDto> buscarPorEmail(@RequestParam String email) {
         var registro = servico.buscarPorEmail(email);
@@ -75,11 +79,13 @@ public class UsuarioController {
         return ResponseEntity.ok(mapper.toResponseDto(registro));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/existe-email", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> existeEmail(@RequestParam String email) {
         return ResponseEntity.ok(servico.existeEmail(email));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/existe-usuario", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> existeUsuario(@RequestParam String usuario) {
         return ResponseEntity.ok(servico.existeUsuario(usuario));

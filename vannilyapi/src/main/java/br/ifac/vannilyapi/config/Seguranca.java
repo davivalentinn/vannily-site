@@ -2,6 +2,7 @@ package br.ifac.vannilyapi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -21,7 +22,8 @@ public class Seguranca {
 
     private final TokenFilter tokenFilter;
 
-    public Seguranca(TokenFilter tokenFilter) {
+    // ✅ @Lazy quebra o ciclo de dependência
+    public Seguranca(@Lazy TokenFilter tokenFilter) {
         this.tokenFilter = tokenFilter;
     }
 
@@ -32,7 +34,9 @@ public class Seguranca {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
+                    req.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/login/autenticar").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/usuarios/inserir").permitAll();
                     req.anyRequest().authenticated();
                 })
                 .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
@@ -40,7 +44,7 @@ public class Seguranca {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) 
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
             throws Exception {
         return configuration.getAuthenticationManager();
     }

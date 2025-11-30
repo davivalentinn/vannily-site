@@ -2,6 +2,7 @@ package br.ifac.vannilyapi.config;
 
 import java.io.IOException;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,35 +21,43 @@ public class TokenFilter extends OncePerRequestFilter {
     private final TokenService tokenService;
     private final UserDetailsService userDetailsService;
 
-    public TokenFilter(TokenService tokenService, UserDetailsService userDetailsService) {
+    // ✅ @Lazy quebra o ciclo de dependência
+    public TokenFilter(TokenService tokenService, @Lazy UserDetailsService userDetailsService) {
         this.tokenService = tokenService;
         this.userDetailsService = userDetailsService;
     }
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        String method = request.getMethod();
+        
+        // NÃO aplicar filtro para rotas públicas
+        return path.equals("/login/autenticar") ||
+               (path.equals("/usuarios/inserir") && method.equals("POST")) ||
+               method.equals("OPTIONS");
+    }
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        
-        // IMPORTANTE: Pular o filtro para rotas públicas
-        String path = request.getRequestURI();
-        if (path.equals("/login/autenticar")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         String token = recuperarToken(request);
 
         if (token != null) {
-            String email = tokenService.validarToken(token);
-            
-            if (email != null) {
-                UserDetails user = userDetailsService.loadUserByUsername(email);
-                var authentication = new UsernamePasswordAuthenticationToken(
-                    user, 
-                    null, 
-                    user.getAuthorities()
-                );
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            try {
+                String email = tokenService.validarToken(token);
+
+                if (email != null) {
+                    UserDetails user = userDetailsService.loadUserByUsername(email);
+
+                    var auth = new UsernamePasswordAuthenticationToken(
+                            user, null, user.getAuthorities());
+
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
+            } catch (Exception e) {
+                // Token inválido - continuar sem autenticação
             }
         }
 
@@ -57,9 +66,11 @@ public class TokenFilter extends OncePerRequestFilter {
 
     private String recuperarToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
+
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             return authHeader.substring(7);
         }
+
         return null;
     }
 }

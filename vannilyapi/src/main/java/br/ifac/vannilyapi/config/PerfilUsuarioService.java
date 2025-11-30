@@ -1,5 +1,6 @@
 package br.ifac.vannilyapi.config;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,7 +13,7 @@ public class PerfilUsuarioService implements UserDetailsService {
 
     private final UsuarioService usuarioService;
 
-    public PerfilUsuarioService(UsuarioService usuarioService) {
+    public PerfilUsuarioService(@Lazy UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
 
