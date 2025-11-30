@@ -1,18 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Search as SearchIcon, X } from "lucide-react";
-import { searchProduto, type ProdutoSearchResult } from "../../services/produto-service"; 
+import { searchProduto } from "../../services/produto-service";
+import type { ProdutoSearchResult } from "../../services/produto-service";
+import { useNavigate } from "react-router-dom";
+
 
 export function Search() {
     const [searchValue, setSearchValue] = useState("");
     const [results, setResults] = useState<ProdutoSearchResult[]>([]);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // Fecha dropdown ao clicar fora
+    // Fechar ao clicar fora
     useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        function handleClickOutside(e: MouseEvent) {
+            if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
                 setResults([]);
             }
         }
@@ -20,7 +24,7 @@ export function Search() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    // Debounce da busca
+    // Debounce
     useEffect(() => {
         const delay = setTimeout(() => {
             if (searchValue.trim().length > 1) {
@@ -68,10 +72,11 @@ export function Search() {
                     {loading ? (
                         <p className="p-4 text-gray-500">Carregando...</p>
                     ) : (
-                        results.map((item: any) => (
+                        results.map((item) => (
                             <div
                                 key={item.id}
                                 className="flex items-center gap-4 p-3 hover:bg-gray-100 cursor-pointer transition"
+                                onClick={() => navigate(`/produto/${item.id}`)}
                             >
                                 <img
                                     src={item.imagem}

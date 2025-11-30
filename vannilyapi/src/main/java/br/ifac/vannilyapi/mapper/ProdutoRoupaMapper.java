@@ -22,7 +22,6 @@ public interface ProdutoRoupaMapper {
     @Mapping(source = "produto.id", target = "produtoId")
     ProdutoRoupaGetDto toResponseDto(ProdutoRoupa entity);
 
-    // Método auxiliar requerido pelo MapStruct
     default Produto map(Long produtoId) {
         if (produtoId == null) return null;
         Produto produto = new Produto();

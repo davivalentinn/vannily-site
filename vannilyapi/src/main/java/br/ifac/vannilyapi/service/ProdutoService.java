@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import br.ifac.vannilyapi.dto.ProdutoGetDto;
+import br.ifac.vannilyapi.mapper.ProdutoMapper;
 import br.ifac.vannilyapi.model.Produto;
 import br.ifac.vannilyapi.repository.ProdutoRepository;
 
@@ -13,9 +15,16 @@ import br.ifac.vannilyapi.repository.ProdutoRepository;
 public class ProdutoService implements ICrudService<Produto>, IPageService<Produto> {
 
     private final ProdutoRepository repo;
+    private final ProdutoMapper mapper;
 
-    public ProdutoService(ProdutoRepository repo) {
+  
+
+    public ProdutoService(
+            ProdutoRepository repo,
+            ProdutoMapper mapper
+    ) {
         this.repo = repo;
+        this.mapper = mapper;
     }
 
     private String normalizar(String valor) {
@@ -54,7 +63,6 @@ public class ProdutoService implements ICrudService<Produto>, IPageService<Produ
         repo.deleteById(id);
     }
 
-
     public List<Produto> buscarPorCategoria(Long categoriaId) {
         return repo.buscarPorCategoria(categoriaId);
     }
@@ -76,6 +84,11 @@ public class ProdutoService implements ICrudService<Produto>, IPageService<Produ
 
     public boolean existePorId(Long id) {
         return repo.existsById(id);
+    }
+
+    public ProdutoGetDto buscarCompleto(Long id) {
+        Produto produto = repo.buscarCompleto(id);
+        return produto == null ? null : mapper.toGetDto(produto);
     }
 
 }

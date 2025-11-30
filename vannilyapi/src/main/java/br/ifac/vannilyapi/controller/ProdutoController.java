@@ -104,4 +104,12 @@ public class ProdutoController {
         var registros = service.buscarPorTemaOuGenero(tema, genero);
         return ResponseEntity.ok(registros.stream().map(mapper::toGetDto).toList());
     }
+
+    @GetMapping("/completo/{id}")
+    public ResponseEntity<ProdutoGetDto> buscarCompleto(@PathVariable Long id) {
+        var dto = service.buscarCompleto(id);
+        if (dto == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(dto);
+    }
+
 }

@@ -1,3 +1,4 @@
+
 package br.ifac.vannilyapi.dto;
 
 public record ProdutoGetDto(
@@ -12,5 +13,8 @@ public record ProdutoGetDto(
         String transportadora,
         String categoriaNome,
         String tema,
-        String genero
+        String genero,
+        ProdutoRoupaGetDto roupa,
+        ProdutoJogoGetDto jogo
 ) {}
+

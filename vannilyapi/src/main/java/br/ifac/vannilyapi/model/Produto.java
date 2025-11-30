@@ -42,7 +42,29 @@ public class Produto implements Serializable {
     @Column(length = 50)
     private String genero;
 
+    @OneToOne(mappedBy = "produto", fetch = FetchType.LAZY)
+    private ProdutoRoupa produtoRoupa;
+
+    @OneToOne(mappedBy = "produto", fetch = FetchType.LAZY)
+    private ProdutoJogo produtoJogo;
+
     // Getters e Setters
+    public ProdutoRoupa getProdutoRoupa() {
+    return produtoRoupa;
+}
+
+public void setProdutoRoupa(ProdutoRoupa produtoRoupa) {
+    this.produtoRoupa = produtoRoupa;
+}
+
+public ProdutoJogo getProdutoJogo() {
+    return produtoJogo;
+}
+
+public void setProdutoJogo(ProdutoJogo produtoJogo) {
+    this.produtoJogo = produtoJogo;
+}
+
     public String getTema() {
         return tema;
     }

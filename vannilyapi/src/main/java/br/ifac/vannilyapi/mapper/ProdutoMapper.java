@@ -8,7 +8,8 @@ import br.ifac.vannilyapi.dto.ProdutoGetDto;
 import br.ifac.vannilyapi.dto.ProdutoUpdateDto;
 import br.ifac.vannilyapi.model.Produto;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        uses = { ProdutoRoupaMapper.class, ProdutoJogoMapper.class })
 public interface ProdutoMapper {
 
     @Mapping(source = "categoria.id", target = "idCategoria")
@@ -19,6 +20,9 @@ public interface ProdutoMapper {
     Produto toEntity(ProdutoCreateDto dto);
 
     @Mapping(source = "categoria.nome", target = "categoriaNome")
+    @Mapping(source = "produtoRoupa", target = "roupa")
+    @Mapping(source = "produtoJogo", target = "jogo")
     ProdutoGetDto toGetDto(Produto produto);
 }
+
 
