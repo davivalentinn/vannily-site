@@ -4,9 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import br.ifac.vannilyapi.model.Usuario;
 import br.ifac.vannilyapi.repository.UsuarioRepository;
@@ -16,6 +18,29 @@ public class UsuarioService implements ICrudService<Usuario> {
 
     private final UsuarioRepository repo;
     private final PasswordEncoder passwordEncoder;
+
+    private void validarDuplicidade(String email, String usuario) {
+        if (repo.existsByEmail(email)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Este e-mail já está cadastrado.");
+        }
+
+        if (repo.existsByUsuario(usuario)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Este nome de usuário já está em uso.");
+        }
+    }
+
+    private void validarDuplicidadeEdicao(Usuario novo, Usuario atual) {
+
+        if (!novo.getEmail().equals(atual.getEmail()) &&
+                repo.existsByEmail(novo.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Este e-mail já está cadastrado.");
+        }
+
+        if (!novo.getUsuario().equals(atual.getUsuario()) &&
+                repo.existsByUsuario(novo.getUsuario())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Este nome de usuário já está em uso.");
+        }
+    }
 
     public UsuarioService(UsuarioRepository repo, PasswordEncoder passwordEncoder) {
         this.repo = repo;
@@ -28,7 +53,7 @@ public class UsuarioService implements ICrudService<Usuario> {
             return repo.findAll();
         }
 
-        final String termo = termoBusca.trim().toLowerCase(); 
+        final String termo = termoBusca.trim().toLowerCase();
         return repo.findAll().stream()
                 .filter(u -> {
                     String nome = u.getNome() != null ? u.getNome().toLowerCase() : "";
@@ -47,22 +72,32 @@ public class UsuarioService implements ICrudService<Usuario> {
     @Override
     @Transactional
     public Usuario salvar(Usuario usuario) {
-        if (usuario.getId() == null) {
+
+        boolean isNovo = usuario.getId() == null;
+
+        if (isNovo) {
+            // --- CRIAÇÃO ---
+            validarDuplicidade(usuario.getEmail(), usuario.getUsuario());
+
             usuario.setDataCriacao(LocalDateTime.now());
             usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+
+            return repo.save(usuario);
+
         } else {
-            Usuario usuarioExistente = repo.findById(usuario.getId()).orElse(null);
-            
-            if (usuarioExistente != null) {
-                if (!usuario.getSenha().equals(usuarioExistente.getSenha())) {
-                    if (!isBCryptHash(usuario.getSenha())) {
-                        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-                    }
-                }
+            // --- EDIÇÃO ---
+            Usuario existente = repo.findById(usuario.getId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado."));
+
+            validarDuplicidadeEdicao(usuario, existente);
+
+            // Reencode se o usuário alterou a senha
+            if (!isBCryptHash(usuario.getSenha())) {
+                usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
             }
+
+            return repo.save(usuario);
         }
-        
-        return repo.save(usuario);
     }
 
     @Override
@@ -91,9 +126,9 @@ public class UsuarioService implements ICrudService<Usuario> {
      * Verifica se a string é um hash BCrypt válido
      */
     private boolean isBCryptHash(String password) {
-        return password != null && 
-               (password.startsWith("$2a$") || 
-                password.startsWith("$2b$") || 
-                password.startsWith("$2y$"));
+        return password != null &&
+                (password.startsWith("$2a$") ||
+                        password.startsWith("$2b$") ||
+                        password.startsWith("$2y$"));
     }
 }

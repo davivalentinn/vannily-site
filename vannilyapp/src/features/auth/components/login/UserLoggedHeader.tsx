@@ -8,8 +8,7 @@ export function UserLoggedHeader() {
   if (!user) return null;
 
   const handleLogout = () => {
-    // ❌ NÃO LIMPA localStorage.clear() (isso apagava coisas indevidas)
-    // Apenas chama o logout do contexto (que já remove token e usuário)
+
     logout();
 
     // Redireciona corretamente

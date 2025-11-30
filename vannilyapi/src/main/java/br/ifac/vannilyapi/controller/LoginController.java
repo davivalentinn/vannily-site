@@ -8,9 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import br.ifac.vannilyapi.config.PerfilUsuario;
 import br.ifac.vannilyapi.config.TokenService;
 import br.ifac.vannilyapi.dto.LoginGetDto;
-import br.ifac.vannilyapi.model.Usuario;
+import br.ifac.vannilyapi.dto.LoginRequestDto;
 import br.ifac.vannilyapi.service.UsuarioService;
-import br.ifac.vannilyapi.model.TipoUsuario;
 
 @RestController
 @RequestMapping("/login")
@@ -30,13 +29,12 @@ public class LoginController {
     }
 
     @PostMapping("/autenticar")
-    public ResponseEntity<LoginGetDto> autenticar(@RequestBody Usuario usuario) {
+    public ResponseEntity<LoginGetDto> autenticar(@RequestBody LoginRequestDto login) {
 
         var authenticationToken = new UsernamePasswordAuthenticationToken(
-                usuario.getEmail(),
-                usuario.getSenha()
-        );
-        
+                login.email(),
+                login.senha());
+
         var autenticacao = authManager.authenticate(authenticationToken);
         var principal = (PerfilUsuario) autenticacao.getPrincipal();
 
@@ -47,8 +45,7 @@ public class LoginController {
                 token,
                 usuarioAutenticado.getEmail(),
                 usuarioAutenticado.getNome(),
-                usuarioAutenticado.getTipoUsuario()
-        );
+                usuarioAutenticado.getTipoUsuario());
 
         return ResponseEntity.ok(dto);
     }
