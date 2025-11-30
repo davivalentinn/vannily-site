@@ -37,6 +37,8 @@ public class Seguranca {
                     req.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/login/autenticar").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/usuarios/inserir").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/produto/consultar").permitAll();
+
                     req.anyRequest().authenticated();
                 })
                 .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)

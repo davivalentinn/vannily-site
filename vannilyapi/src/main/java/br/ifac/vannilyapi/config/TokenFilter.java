@@ -21,7 +21,6 @@ public class TokenFilter extends OncePerRequestFilter {
     private final TokenService tokenService;
     private final UserDetailsService userDetailsService;
 
-    // ✅ @Lazy quebra o ciclo de dependência
     public TokenFilter(TokenService tokenService, @Lazy UserDetailsService userDetailsService) {
         this.tokenService = tokenService;
         this.userDetailsService = userDetailsService;
@@ -31,11 +30,12 @@ public class TokenFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
         String method = request.getMethod();
-        
+
         // NÃO aplicar filtro para rotas públicas
         return path.equals("/login/autenticar") ||
-               (path.equals("/usuarios/inserir") && method.equals("POST")) ||
-               method.equals("OPTIONS");
+                (path.equals("/usuarios/inserir") && method.equals("POST")) ||
+                path.startsWith("/produto/consultar") ||
+                method.equals("OPTIONS");
     }
 
     @Override
