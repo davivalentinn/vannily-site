@@ -84,13 +84,13 @@ const ProductSlider: React.FC = () => {
                     {visibleProducts.map((product) => (
                         <Link
                             key={product.id}
-                            to={`/product/${product.id}`}
+                            to={`/produto/${product.id}`}
                             className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 h-[480px] flex flex-col group"
                         >
                             {/* Imagem com Badge de Desconto */}
                             <div className="relative h-64 bg-gray-50 flex items-center justify-center p-4">
                                 <img
-                                    src={product.image}
+                                    src={product.image}         
                                     alt={product.title}
                                     className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300"
                                 />
