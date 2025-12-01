@@ -82,3 +82,7 @@ export async function searchProduto(termo: string): Promise<ProdutoSearchResult[
   });
   return response.data;
 }
+export async function listarPromocoes(): Promise<ProdutoGetDto[]> {
+  const response = await api.get("/produto/promocoes");
+  return response.data;
+}

@@ -38,6 +38,7 @@ public class Seguranca {
                     req.requestMatchers(HttpMethod.POST, "/login/autenticar").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/usuarios/inserir").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/produto/consultar").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/produto/promocoes").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/produto/consultar/{id}").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/produto/completo/{id}").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/produto-roupa/consultar/{id}").permitAll();

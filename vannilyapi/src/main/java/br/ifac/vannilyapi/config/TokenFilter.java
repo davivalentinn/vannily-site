@@ -35,6 +35,7 @@ public class TokenFilter extends OncePerRequestFilter {
         return path.equals("/login/autenticar") ||
                 (path.equals("/usuarios/inserir") && method.equals("POST")) ||
                 path.startsWith("/produto/consultar") ||
+                path.startsWith("/produto/promocoes") ||
                 path.startsWith("/produto/consultar/{id}") ||
                 path.startsWith("/produto/completo/{id}") ||
                 path.startsWith("/produto-roupa/consultar/{id}") ||
