@@ -1,47 +1,88 @@
 import { Heart, ChevronLeft, ChevronRight } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { products } from '../../data';
 import type { Product } from '../../types';
 import { Button, IconButton } from '../ui';
 import backgroundImage from '../../assets/images/background/carousel-bg.png';
 
-const ProductCarousel: React.FC = () => {
-    const [currentIndex, setCurrentIndex] = useState(1);
-    const [isFavorite, setIsFavorite] = useState(false);
+interface ProductCarouselProps {
+    limit?: number; // número de produtos a exibir
+    autoplayDelay?: number; // delay do autoplay
+}
 
+const ProductCarousel: React.FC<ProductCarouselProps> = ({
+    limit = 3,
+    autoplayDelay = 2000
+}) => {
+    const carouselProducts = products.slice(0, limit);
+
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isFavorite, setIsFavorite] = useState(false);
+    const autoplayRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Funções de navegação
     const handlePrev = () => {
-        setCurrentIndex((prev) => (prev > 0 ? prev - 1 : products.length - 1));
+        setCurrentIndex((prev) =>
+            prev > 0 ? prev - 1 : carouselProducts.length - 1
+        );
     };
 
     const handleNext = () => {
-        setCurrentIndex((prev) => (prev < products.length - 1 ? prev + 1 : 0));
+        setCurrentIndex((prev) =>
+            prev < carouselProducts.length - 1 ? prev + 1 : 0
+        );
     };
 
-    const getPrevIndex = () => (currentIndex > 0 ? currentIndex - 1 : products.length - 1);
-    const getNextIndex = () => (currentIndex < products.length - 1 ? currentIndex + 1 : 0);
+    const getPrevIndex = () =>
+        currentIndex > 0 ? currentIndex - 1 : carouselProducts.length - 1;
 
-    const currentProduct = products[currentIndex];
-    const prevProduct = products[getPrevIndex()];
-    const nextProduct = products[getNextIndex()];
+    const getNextIndex = () =>
+        currentIndex < carouselProducts.length - 1 ? currentIndex + 1 : 0;
+
+    const currentProduct = carouselProducts[currentIndex];
+    const prevProduct = carouselProducts[getPrevIndex()];
+    const nextProduct = carouselProducts[getNextIndex()];
 
     const formatPrice = (price: number): string => {
         return price.toFixed(2).replace('.', ',');
     };
 
+    // ----------------------------
+    // 🔁 AUTOPLAY
+    // ----------------------------
+    const startAutoplay = () => {
+        stopAutoplay();
+        autoplayRef.current = setInterval(() => {
+            handleNext();
+        }, autoplayDelay);
+    };
+
+    const stopAutoplay = () => {
+        if (autoplayRef.current) {
+            clearInterval(autoplayRef.current);
+        }
+    };
+
+    useEffect(() => {
+        startAutoplay();
+        return () => stopAutoplay();
+    }, [currentIndex, limit]);
+
     return (
-        <div 
+        <div
             className="w-full h-[600px] md:h-[700px] lg:h-[800px] bg-cover bg-center bg-no-repeat relative overflow-hidden"
             style={{
                 backgroundImage: `url(${backgroundImage})`
             }}
+            onMouseEnter={stopAutoplay}
+            onMouseLeave={startAutoplay}
         >
-            {/* Overlay escuro para melhorar legibilidade */}
             <div className="absolute inset-0 bg-black/95"></div>
-            
-            {/* Container com scroll interno se necessário */}
+
             <div className="max-w-7xl mx-auto relative z-10 h-full flex items-center py-12 px-4 overflow-y-auto">
                 <div className="grid lg:grid-cols-2 gap-8 items-center w-full">
-                    {/* Informações do Produto */}
+                    
+                    {/* Informações */}
                     <div className="space-y-6 order-2 lg:order-1">
                         <h2 className="text-4xl font-bold text-productCarousel font-montserrat">
                             {currentProduct.title}
@@ -88,28 +129,27 @@ const ProductCarousel: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Galeria de Imagens */}
+                    {/* Galeria */}
                     <div className="relative order-1 lg:order-2">
                         <div className="flex items-center justify-center gap-4">
                             <button
                                 onClick={handlePrev}
                                 className="z-10 p-2 rounded-full bg-white shadow-lg hover:bg-gray-100 transition-colors"
-                                aria-label="Produto anterior"
                             >
                                 <ChevronLeft className="w-6 h-6 text-gray-700" />
                             </button>
 
                             <div className="flex items-center gap-4 overflow-hidden">
-                                {/* Imagem Anterior */}
-                                <div className="opacity-30 scale-75 transition-all duration-300 hidden md:block">
-                                    <img
-                                        src={prevProduct.image}
-                                        alt={prevProduct.title}
-                                        className="w-48 h-48 object-cover rounded-lg"
-                                    />
-                                </div>
+                                {carouselProducts.length > 1 && (
+                                    <div className="opacity-30 scale-75 transition-all duration-300 hidden md:block">
+                                        <img
+                                            src={prevProduct.image}
+                                            alt={prevProduct.title}
+                                            className="w-48 h-48 object-cover rounded-lg"
+                                        />
+                                    </div>
+                                )}
 
-                                {/* Imagem Atual */}
                                 <div className="scale-100 transition-all duration-300 shadow-2xl">
                                     <img
                                         src={currentProduct.image}
@@ -118,20 +158,20 @@ const ProductCarousel: React.FC = () => {
                                     />
                                 </div>
 
-                                {/* Próxima Imagem */}
-                                <div className="opacity-30 scale-75 transition-all duration-300 hidden md:block">
-                                    <img
-                                        src={nextProduct.image}
-                                        alt={nextProduct.title}
-                                        className="w-48 h-48 object-cover rounded-lg"
-                                    />
-                                </div>
+                                {carouselProducts.length > 1 && (
+                                    <div className="opacity-30 scale-75 transition-all duration-300 hidden md:block">
+                                        <img
+                                            src={nextProduct.image}
+                                            alt={nextProduct.title}
+                                            className="w-48 h-48 object-cover rounded-lg"
+                                        />
+                                    </div>
+                                )}
                             </div>
 
                             <button
                                 onClick={handleNext}
                                 className="z-10 p-2 rounded-full bg-white shadow-lg hover:bg-gray-100 transition-colors"
-                                aria-label="Próximo produto"
                             >
                                 <ChevronRight className="w-6 h-6 text-gray-700" />
                             </button>
@@ -139,15 +179,15 @@ const ProductCarousel: React.FC = () => {
 
                         {/* Indicadores */}
                         <div className="flex justify-center gap-2 mt-6">
-                            {products.map((_, index) => (
+                            {carouselProducts.map((_, index) => (
                                 <button
                                     key={index}
                                     onClick={() => setCurrentIndex(index)}
-                                    className={`h-2 rounded-full transition-all ${index === currentIndex
-                                        ? 'w-8 bg-background'
-                                        : 'w-2 bg-gray-300 hover:bg-background/90'
-                                        }`}
-                                    aria-label={`Ir para produto ${index + 1}`}
+                                    className={`h-2 rounded-full transition-all ${
+                                        index === currentIndex
+                                            ? 'w-8 bg-background'
+                                            : 'w-2 bg-gray-300 hover:bg-background/90'
+                                    }`}
                                 />
                             ))}
                         </div>
