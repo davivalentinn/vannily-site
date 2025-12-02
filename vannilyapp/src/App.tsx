@@ -13,6 +13,7 @@ import { ProductPage } from './pages/product';
 //Importa Components
 import { Layout } from './components/Layout';
 import Profile from './pages/account/profile';
+import { AllProducts } from './pages/all-products';
 //Fim Importa Components
 
 const router = createBrowserRouter([
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
         path: "/account/profile",
         element: <Profile />
       },
+      {
+        path: "/all-products",
+        element: <AllProducts/>
+      }
 
     ]
 

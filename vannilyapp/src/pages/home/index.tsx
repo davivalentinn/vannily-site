@@ -5,7 +5,6 @@ import ProductSlider from "../../components/sections/ProductSlider/ProductSlider
 import {
     listarPromocoes,
     listarProdutosPorNomeCategoria,
-    buscarProdutosPorMaterialForro,
     listarProdutosRecentes,
     buscarProdutoPorId,
     type ProdutoCompleto,

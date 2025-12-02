@@ -151,9 +151,9 @@ INSERT INTO `produto_roupa` (
 
 -- Usuário
 INSERT INTO usuario (nome, numero_telefone, email, usuario, senha, tipo_usuario, data_criacao) VALUES
-('Administrador', '11999990000', 'admin@vannily.com', 'admin', '$2b$12$SyU2.9ps6CocZGHsg0KfA.4sqB.uaaGi.I.QItP1sYuFP/zr9xE9.', 'ADMIN', NOW()),
-('Elyvan Teste', '11988887777', 'elyvan@vannily.com', 'elyvan', '$2b$12$vDrLNPPvIlPilD81eIpX0OXlU6ezgmi4Mso8IJbBvzjqU./9Y8Zq2', 'CLIENTE', NOW()),
-('Cliente Demo', '11977776666', 'cliente@vannily.com', 'cliente', '$2b$12$IJUsHKRPzIQqVDH3X6uUaOfYkN5bbkeXZIdajd7SDvuusXAYdHFz6', 'CLIENTE', NOW());
+('Administrador', '+55 (68) 99932-0031', 'admin@vannily.com', 'admin', '$2b$12$SyU2.9ps6CocZGHsg0KfA.4sqB.uaaGi.I.QItP1sYuFP/zr9xE9.', 'ADMIN', NOW()),
+('Elyvan Teste', '+55 (68) 99940-0525', 'elyvan@vannily.com', 'elyvan', '$2b$12$vDrLNPPvIlPilD81eIpX0OXlU6ezgmi4Mso8IJbBvzjqU./9Y8Zq2', 'CLIENTE', NOW()),
+('Cliente Demo', '+55 (68) 99983-5589', 'cliente@vannily.com', 'cliente', '$2b$12$IJUsHKRPzIQqVDH3X6uUaOfYkN5bbkeXZIdajd7SDvuusXAYdHFz6', 'CLIENTE', NOW());
 
 -- Endereço
 INSERT INTO `endereco` (`id`, `id_usuario`, `cep`, `pais`, `estado`, `cidade`, `bairro`, `rua`, `numero`, `complemento`) VALUES

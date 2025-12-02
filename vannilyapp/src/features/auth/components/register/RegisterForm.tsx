@@ -39,11 +39,51 @@ export default function RegisterForm() {
     logout(); // Logout automático
   }, [logout]);
 
+  const formatPhone = (value: string) => {
+  // Mantém apenas números
+  let digits = value.replace(/\D/g, "");
+
+  // Apagar tudo → campo vazio
+  if (digits.length === 0) return "";
+
+  // Garante que sempre comece com 55
+  if (!digits.startsWith("55")) {
+    digits = "55" + digits;
+  }
+
+  // Limita (55 + 11 dígitos)
+  digits = digits.slice(0, 13);
+
+  // Monta a máscara
+  let formatted = `+${digits.slice(0, 2)}`; // +55
+
+  if (digits.length > 2) {
+    formatted += ` (${digits.slice(2, 4)}`; // (DD
+  }
+  if (digits.length > 4) {
+    formatted += `) ${digits.slice(4, 9)}`; // ) 9xxxx
+  }
+  if (digits.length > 9) {
+    formatted += `-${digits.slice(9)}`; // -xxxx
+  }
+
+  return formatted;
+};
+
+
   // Atualiza inputs
   const handleChange = (field: string, value: string | boolean) => {
+  if (field === "phone") {
+    const formatted = formatPhone(String(value));
+    setFormData((prev) => ({ ...prev, phone: formatted }));
+  } else {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    setError(null);
-  };
+  }
+
+  setError(null);
+};
+
+
 
   // Validação local
   const validateForm = (): string | null => {
@@ -116,7 +156,7 @@ export default function RegisterForm() {
       }
 
       setError("Erro ao criar conta. Tente novamente.");
-      
+
     } finally {
       setIsLoading(false);
     }
@@ -125,7 +165,7 @@ export default function RegisterForm() {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-5xl mx-auto bg-white border-4 border-background rounded p-8">
-        
+
         <div className="mb-8">
           <h1 className="text-2xl font-bold">CRIAR CONTA</h1>
           <p className="text-sm text-gray-600 mt-1 font-semibold">

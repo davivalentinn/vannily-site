@@ -2,7 +2,7 @@ import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'button' | 'secondary' | 'outline' | 'pill';
+  variant?: 'button' | 'secondary' | 'outline' | 'pill' | 'favorite';
   size?: 'sm' | 'md' | 'lg';
   children: React.ReactNode;
 }
