@@ -23,7 +23,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [loginMessage, setLoginMessage] = useState("");
     const autoplayRef = useRef<NodeJS.Timeout | null>(null);
-    
+
     const { isAuthenticated } = useAuth();
 
     // Se não tem produtos, não renderiza nada
@@ -110,7 +110,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
             onMouseLeave={startAutoplay}
         >
             {/* Modal de Login */}
-            <LoginModal 
+            <LoginModal
                 isOpen={showLoginModal}
                 onClose={() => setShowLoginModal(false)}
                 message={loginMessage}
@@ -120,7 +120,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
 
             <div className="max-w-7xl mx-auto relative z-10 h-full flex items-center py-12 px-4 overflow-y-auto">
                 <div className="grid lg:grid-cols-2 gap-8 items-center w-full">
-                    
+
                     {/* Informações */}
                     <div className="space-y-6 order-2 lg:order-1">
                         <h2 className="text-4xl font-bold text-productCarousel font-montserrat">
@@ -240,11 +240,10 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
                                     <button
                                         key={index}
                                         onClick={() => setCurrentIndex(index)}
-                                        className={`h-2 rounded-full transition-all ${
-                                            index === currentIndex
+                                        className={`h-2 rounded-full transition-all ${index === currentIndex
                                                 ? 'w-8 bg-background'
                                                 : 'w-2 bg-gray-300 hover:bg-background/90'
-                                        }`}
+                                            }`}
                                     />
                                 ))}
                             </div>
