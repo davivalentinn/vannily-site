@@ -1,11 +1,10 @@
 import { api } from "./api";
 
-export interface ProdutoSearchResult {
-  id: number;
-  nome: string;
-  preco: number;
-  imagem: string;
+export interface ProdutoSearchResult extends ProdutoGetDto {
+  jogo?: ProdutoJogoGetDto;
+  roupa?: ProdutoRoupaGetDto;
 }
+
 
 // DTOs iguais aos do backend
 export interface ProdutoGetDto {
