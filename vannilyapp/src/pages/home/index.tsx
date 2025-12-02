@@ -67,7 +67,7 @@ export function Home() {
 
             <ProductSlider
                 title="Jogos de Tabuleiro"
-                fetchFunction={() => listarProdutosPorNomeCategoria("Jogos")}
+                fetchFunction={() => listarProdutosPorNomeCategoria("Jogos de Tabuleiro")}
             />
 
             <ProductSlider
@@ -80,8 +80,14 @@ export function Home() {
 
             <ProductSlider
                 title="Material de Algodão"
-                fetchFunction={() => buscarProdutosPorMaterialForro("algodao")}
+                fetchFunction={() => buscarProdutosPorMaterialForro("Algodão")}
             />
+
+            <ProductSlider
+                title="Jogos de Cartas"
+                fetchFunction={() => listarProdutosPorNomeCategoria("Jogos de Cartas")}
+            />
+
 
         </>
     );

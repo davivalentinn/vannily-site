@@ -10,8 +10,8 @@ export const ModaGeekSection = () => {
                 backgroundImage: `url(${bgImage})`,
             }}
         >
-            <h1 className="text-center text-4xl font-bold text-white mb-10">
-                <span className="text-[#c84bff]">ModaGeek</span> da Vannily
+            <h1 className="text-center text-4xl font-extrabold text-white mb-10">
+                <span className="text-background">ModaGeek</span> da Vannily
             </h1>
 
             <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
