@@ -25,7 +25,16 @@
     @apply font-montserrat font-bold uppercase text-base
   }
 
+  h3 {
+    @apply font-montserrat
+  }
+
   h1 {
     @apply font-montserrat font-black uppercase text-3xl
   }
+
+  p{
+    @apply font-montserrat
+  }
 }
+

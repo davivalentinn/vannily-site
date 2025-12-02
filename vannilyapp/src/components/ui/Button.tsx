@@ -2,7 +2,7 @@ import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'button' | 'secondary' | 'outline';
+  variant?: 'button' | 'secondary' | 'outline' | 'pill';
   size?: 'sm' | 'md' | 'lg';
   children: React.ReactNode;
 }
@@ -17,9 +17,10 @@ const Button: React.FC<ButtonProps> = ({
   const baseStyles = 'font-semibold rounded-lg transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed';
   
   const variants = {
-    button: 'bg-button text-white hover:bg-button-90',
-    secondary: 'bg-gray-600 text-white hover:bg-gray-700',
-    outline: 'bg-white border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50'
+    button: 'bg-button text-white hover:bg-button-90 font-montserrat',
+    secondary: 'bg-gray-600 text-white hover:bg-gray-700 font-montserrat',
+    outline: 'bg-white border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 font-montserrat',
+    pill: 'bg-bar text-white font-montserrat'
   };
   
   const sizes = {

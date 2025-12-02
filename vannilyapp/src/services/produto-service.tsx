@@ -140,3 +140,11 @@ export async function filtrarProdutos(tema?: string, genero?: string): Promise<P
   });
   return response.data;
 }
+
+/**
+ * 🆕 Busca produtos por material do forro (somente roupas)
+ */
+export async function buscarProdutosPorMaterialForro(materialForro: string): Promise<ProdutoGetDto[]> {
+  const response = await api.get(`/produto/roupa/material/${materialForro}`);
+  return response.data;
+}
