@@ -5,12 +5,35 @@ import {
   type ProdutoCompleto,
 } from "../../services/produto-service";
 import { ShoppingCart, Heart } from "lucide-react";
+import { Button, IconButton } from "../../components/ui";
+import LoginModal from "../../features/auth/components/LoginModal";
+import { useAuth } from "../../context/authContext";
 
 export function ProductPage() {
   const { id } = useParams();
   const [produto, setProduto] = useState<ProdutoCompleto | null>(null);
+  const [favorites, setFavorites] = useState<number[]>([]);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loginMessage, setLoginMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [quantidade, setQuantidade] = useState(1);
+  const { isAuthenticated } = useAuth();
+  
+
+  const toggleFavorite = (productId: number) => {
+    // Verifica se está logado
+    if (!isAuthenticated) {
+      setLoginMessage("Você precisa estar logado para adicionar produtos aos favoritos.");
+      setShowLoginModal(true);
+      return;
+    }
+
+    setFavorites((prev) =>
+      prev.includes(productId)
+        ? prev.filter((id) => id !== productId)
+        : [...prev, productId]
+    );
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -43,7 +66,12 @@ export function ProductPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       <div className="grid md:grid-cols-2 gap-10">
-        
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+          message={loginMessage}
+        />
+
         {/* Imagem */}
         <div className="bg-gray-50 rounded-lg p-8 flex items-center justify-center">
           <img
@@ -59,7 +87,7 @@ export function ProductPage() {
 
           {/* Preço */}
           <div className="space-y-1">
-            <span className="text-4xl font-bold text-purple-600">
+            <span className="text-4xl font-bold text-title">
               R$ {produto.preco.toFixed(2)}
             </span>
 
@@ -80,7 +108,7 @@ export function ProductPage() {
           {/* Detalhes da Roupa */}
           {produto.roupa && (
             <div className="p-4 bg-purple-50 rounded space-y-2 shadow">
-              <h2 className="text-xl font-bold text-purple-700">Detalhes da Roupa</h2>
+              <h2 className="text-xl font-bold text-title">Detalhes da Roupa</h2>
               <p><strong>Tamanho:</strong> {produto.roupa.tamanho}</p>
               <p><strong>Cor:</strong> {produto.roupa.cor}</p>
               <p><strong>Modelo:</strong> {produto.roupa.modelo}</p>
@@ -91,8 +119,8 @@ export function ProductPage() {
 
           {/* Detalhes do Jogo */}
           {produto.jogo && (
-            <div className="p-4 bg-purple-50 rounded space-y-2 shadow">
-              <h2 className="text-xl font-bold text-purple-700">Detalhes do Jogo</h2>
+            <div className="p-4 bg-pink-20 rounded space-y-2 shadow">
+              <h2 className="text-xl font-bold text-title">Detalhes do Jogo</h2>
               <p><strong>Qtd Pessoas:</strong> {produto.jogo.qtdPessoas}</p>
               <p><strong>Classificação:</strong> {produto.jogo.classificacaoIndicativa}</p>
               <p><strong>Duração:</strong> {produto.jogo.duracao}</p>
@@ -118,18 +146,27 @@ export function ProductPage() {
 
           {/* Botões */}
           <div className="flex items-center gap-4 pt-4">
-            <button className="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition">
-              Comprar Agora
-            </button>
-
-            <button className="flex items-center gap-2 border px-4 py-3 rounded-lg hover:bg-gray-100 transition">
+            <Button
+              variant="button"
+              size="md"
+            >Comprar agora</Button>
+            <Button
+              variant="button"
+              size="md"
+              className="flex gap-2 items-center justify-center"
+            >
               <ShoppingCart />
-              Adicionar
-            </button>
+              Adicionar ao carrinho
+            </Button>
 
-            <button className="p-3 border rounded-lg hover:bg-gray-100 transition">
-              <Heart />
-            </button>
+            <IconButton
+              variant="danger"
+              active={favorites.includes(produto.id)}
+              onClick={() => toggleFavorite(produto.id)}
+              aria-label="Adicionar aos favoritos"
+            >
+              <Heart className={`w-6 h-6 ${favorites.includes(produto.id) ? 'fill-current' : ''}`} />
+            </IconButton>
           </div>
         </div>
       </div>
