@@ -39,14 +39,22 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     List<Produto> buscarPorTemaOuGenero(String tema, String genero);
 
     @Query("""
-    SELECT p FROM Produto p
-    LEFT JOIN FETCH p.categoria
-    LEFT JOIN FETCH p.produtoRoupa
-    LEFT JOIN FETCH p.produtoJogo
-    WHERE p.id = :id
-    """)
+            SELECT p FROM Produto p
+            LEFT JOIN FETCH p.categoria
+            LEFT JOIN FETCH p.produtoRoupa
+            LEFT JOIN FETCH p.produtoJogo
+            WHERE p.id = :id
+            """)
     Produto buscarCompleto(Long id);
 
+    /**
+     * Busca produtos por nome da categoria (case insensitive)
+     */
+    List<Produto> findByCategoriaNomeIgnoreCase(String nomeCategoria);
 
+    /**
+     * Busca os N produtos mais recentes ordenados por ID descendente
+     */
+    Page<Produto> findTopByOrderByIdDesc(Pageable pageable);
 
 }

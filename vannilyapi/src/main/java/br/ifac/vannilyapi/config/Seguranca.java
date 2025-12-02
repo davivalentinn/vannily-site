@@ -34,16 +34,28 @@ public class Seguranca {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
+                    // ✅ OPTIONS (preflight CORS)
                     req.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+                    
+                    // ✅ Autenticação e registro
                     req.requestMatchers(HttpMethod.POST, "/login/autenticar").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/usuarios/inserir").permitAll();
+                    
+                    // ✅ Endpoints públicos de produtos
                     req.requestMatchers(HttpMethod.GET, "/produto/consultar").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/produto/consultar/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/produto/promocoes").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/produto/consultar/{id}").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/produto/completo/{id}").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/produto-roupa/consultar/{id}").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/produto-jogo/consultar/{id}").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/produto/categoria/**").permitAll();     
+                    req.requestMatchers(HttpMethod.GET, "/produto/recentes").permitAll();         
+                    req.requestMatchers(HttpMethod.GET, "/produto/todos").permitAll();            
+                    req.requestMatchers(HttpMethod.GET, "/produto/filtrar").permitAll();         
+                    req.requestMatchers(HttpMethod.GET, "/produto/completo/**").permitAll();
+                    
+                    // ✅ Endpoints de produto-roupa e produto-jogo
+                    req.requestMatchers(HttpMethod.GET, "/produto-roupa/consultar/**").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/produto-jogo/consultar/**").permitAll();
 
+                    // 🔒 Todo o resto requer autenticação
                     req.anyRequest().authenticated();
                 })
                 .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)

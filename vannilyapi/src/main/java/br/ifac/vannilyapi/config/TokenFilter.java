@@ -36,10 +36,13 @@ public class TokenFilter extends OncePerRequestFilter {
                 (path.equals("/usuarios/inserir") && method.equals("POST")) ||
                 path.startsWith("/produto/consultar") ||
                 path.startsWith("/produto/promocoes") ||
-                path.startsWith("/produto/consultar/{id}") ||
-                path.startsWith("/produto/completo/{id}") ||
-                path.startsWith("/produto-roupa/consultar/{id}") ||
-                path.startsWith("/produto-jogo/consultar/{id}") ||
+                path.startsWith("/produto/categoria/") ||          
+                path.startsWith("/produto/recentes") ||           
+                path.startsWith("/produto/todos") ||              
+                path.startsWith("/produto/filtrar") ||             
+                path.startsWith("/produto/completo/") ||
+                path.startsWith("/produto-roupa/consultar/") ||
+                path.startsWith("/produto-jogo/consultar/") ||
                 method.equals("OPTIONS");
     }
 

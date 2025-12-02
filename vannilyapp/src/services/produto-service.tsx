@@ -71,18 +71,72 @@ export interface ProdutoCompleto extends ProdutoGetDto {
   roupa?: ProdutoRoupaGetDto;
 }
 
+/**
+ * Busca um produto completo por ID (com dados de jogo/roupa se houver)
+ */
 export async function buscarProdutoPorId(id: number): Promise<ProdutoCompleto> {
   const response = await api.get(`/produto/completo/${id}`);
   return response.data as ProdutoCompleto;
 }
 
+/**
+ * Busca produtos por termo de pesquisa
+ */
 export async function searchProduto(termo: string): Promise<ProdutoSearchResult[]> {
   const response = await api.get("/produto/consultar", {
     params: { termoBusca: termo },
   });
   return response.data;
 }
+
+/**
+ * Lista todos os produtos em promoção (com desconto > 0)
+ */
 export async function listarPromocoes(): Promise<ProdutoGetDto[]> {
   const response = await api.get("/produto/promocoes");
+  return response.data;
+}
+
+/**
+ * 🆕 Lista produtos por ID da categoria
+ */
+export async function listarProdutosPorCategoria(categoriaId: number): Promise<ProdutoGetDto[]> {
+  const response = await api.get(`/produto/categoria/${categoriaId}`);
+  return response.data;
+}
+
+/**
+ * 🆕 Lista produtos por NOME da categoria (ex: "Roupas", "Jogos")
+ */
+export async function listarProdutosPorNomeCategoria(nomeCategoria: string): Promise<ProdutoGetDto[]> {
+  const response = await api.get(`/produto/categoria/nome/${nomeCategoria}`);
+  return response.data;
+}
+ 
+/**
+ * 🆕 Lista produtos recentes (últimos adicionados)
+ */
+export async function listarProdutosRecentes(limite: number = 10): Promise<ProdutoGetDto[]> {
+  const response = await api.get("/produto/recentes", {
+    params: { limite },
+  });
+  return response.data;
+}
+
+/**
+ * 🆕 Lista TODOS os produtos disponíveis
+ */
+export async function listarTodosProdutos(): Promise<ProdutoGetDto[]> {
+  const response = await api.get("/produto/todos");
+  return response.data;
+}
+
+/**
+ * Filtra produtos por tema e/ou gênero
+ */
+export async function filtrarProdutos(tema?: string, genero?: string): Promise<ProdutoGetDto[]> {
+  const response = await api.get("/produto/filtrar", {
+    params: { tema, genero },
+  });
   return response.data;
 }

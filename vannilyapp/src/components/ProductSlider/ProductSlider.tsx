@@ -1,40 +1,67 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { listarPromocoes, buscarProdutoPorId, type ProdutoGetDto, type ProdutoCompleto } from "../../services/produto-service";
+import { 
+    buscarProdutoPorId, 
+    type ProdutoGetDto, 
+    type ProdutoCompleto 
+} from "../../services/produto-service";
 
 import { ChevronLeft, ChevronRight, Heart, Users, Clock } from "lucide-react";
 import { Button } from "../ui";
+import { useAuth } from "../../features/auth/hooks/useAuth";
+import LoginModal from "../../features/auth/components/LoginModal/LoginModal";
 
-const ProductSlider: React.FC = () => {
+interface ProductSliderProps {
+    title: string;
+    fetchFunction: () => Promise<ProdutoGetDto[]>; // função que busca os produtos
+    itemsPerView?: number;
+}
+
+const ProductSlider: React.FC<ProductSliderProps> = ({ 
+    title, 
+    fetchFunction,
+    itemsPerView = 4 
+}) => {
     const [startIndex, setStartIndex] = useState(0);
     const [favorites, setFavorites] = useState<number[]>([]);
     const [produtos, setProdutos] = useState<ProdutoCompleto[]>([]);
     const [loading, setLoading] = useState(true);
-
-    const itemsPerView = 4;
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [loginMessage, setLoginMessage] = useState("");
+    
+    const { isAuthenticated } = useAuth();
 
     useEffect(() => {
         async function carregar() {
             setLoading(true);
+            try {
+                console.log(`[${title}] Buscando produtos...`);
+                
+                // 1️⃣ Buscar produtos usando a função passada por prop
+                const baseProducts: ProdutoGetDto[] = await fetchFunction();
+                console.log(`[${title}] Produtos encontrados:`, baseProducts.length);
 
-            // 1️⃣ Buscar promoções (dados básicos)
-            const baseProducts: ProdutoGetDto[] = await listarPromocoes();
+                // 2️⃣ Para cada produto, buscar o completo
+                const completos: ProdutoCompleto[] = [];
 
-            // 2️⃣ Para cada produto, buscar o completo (somente para jogos / roupas)
-            const completos: ProdutoCompleto[] = [];
+                for (const prod of baseProducts) {
+                    const completo = await buscarProdutoPorId(prod.id);
+                    completos.push(completo);
+                }
 
-            for (const prod of baseProducts) {
-                const completo = await buscarProdutoPorId(prod.id);
-                completos.push(completo);
+                setProdutos(completos);
+                console.log(`[${title}] Produtos completos carregados:`, completos.length);
+            } catch (error) {
+                console.error(`[${title}] Erro ao carregar produtos:`, error);
+                setProdutos([]);
+            } finally {
+                setLoading(false);
             }
-
-            setProdutos(completos);
-            setLoading(false);
         }
 
         carregar();
-    }, []);
+    }, [fetchFunction, title]);
 
     const handlePrev = () => setStartIndex((prev) => Math.max(0, prev - 1));
     const handleNext = () =>
@@ -46,11 +73,34 @@ const ProductSlider: React.FC = () => {
         e.preventDefault();
         e.stopPropagation();
 
+        // Verifica se está logado
+        if (!isAuthenticated) {
+            setLoginMessage("Você precisa estar logado para adicionar produtos aos favoritos.");
+            setShowLoginModal(true);
+            return;
+        }
+
         setFavorites((prev) =>
             prev.includes(productId)
                 ? prev.filter((id) => id !== productId)
                 : [...prev, productId]
         );
+    };
+
+    const handleAddToCart = (e: React.MouseEvent, productId: number) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Verifica se está logado
+        if (!isAuthenticated) {
+            setLoginMessage("Você precisa estar logado para adicionar produtos ao carrinho.");
+            setShowLoginModal(true);
+            return;
+        }
+
+        // Aqui você adiciona a lógica do carrinho
+        console.log("Adicionado ao carrinho:", productId);
+        // TODO: Implementar lógica de adicionar ao carrinho
     };
 
     const formatPrice = (price: number) =>
@@ -59,15 +109,25 @@ const ProductSlider: React.FC = () => {
     const visibleProducts = produtos.slice(startIndex, startIndex + itemsPerView);
 
     if (loading)
-        return <p className="text-center p-10">Carregando promoções...</p>;
+        return <p className="text-center p-10">Carregando produtos...</p>;
+
+    if (produtos.length === 0)
+        return null;
 
     return (
         <div className="w-full py-12 px-4 bg-gray-50">
+            {/* Modal de Login */}
+            <LoginModal 
+                isOpen={showLoginModal}
+                onClose={() => setShowLoginModal(false)}
+                message={loginMessage}
+            />
+
             <div className="max-w-7xl mx-auto">
 
                 {/* Cabeçalho */}
                 <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-3xl font-bold text-bar">Promoções</h2>
+                    <h2 className="text-3xl font-bold text-bar">{title}</h2>
 
                     <div className="flex gap-2">
                         <button
@@ -167,7 +227,12 @@ const ProductSlider: React.FC = () => {
                                         )}
                                     </div>
 
-                                    <Button variant="button" size="md" className="w-full mt-3">
+                                    <Button 
+                                        variant="button" 
+                                        size="md" 
+                                        className="w-full mt-3"
+                                        onClick={(e) => handleAddToCart(e, product.id)}
+                                    >
                                         Adicionar ao Carrinho
                                     </Button>
                                 </div>

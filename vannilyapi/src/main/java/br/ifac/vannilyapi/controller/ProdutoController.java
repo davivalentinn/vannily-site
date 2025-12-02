@@ -31,7 +31,7 @@ public class ProdutoController {
     }
 
     @GetMapping("/consultar")
-        public ResponseEntity<List<ProdutoGetDto>> consultar(@RequestParam(required = false) String termoBusca) {
+    public ResponseEntity<List<ProdutoGetDto>> consultar(@RequestParam(required = false) String termoBusca) {
         var registros = service.consultar(termoBusca);
         var dtos = registros.stream().map(mapper::toGetDto).toList();
         return ResponseEntity.ok(dtos);
@@ -90,10 +90,36 @@ public class ProdutoController {
         return ResponseEntity.ok(dtos);
     }
 
+    // 🆕 NOVO: Buscar por nome da categoria
+    @GetMapping("/categoria/nome/{nomeCategoria}")
+    public ResponseEntity<List<ProdutoGetDto>> buscarPorNomeCategoria(@PathVariable String nomeCategoria) {
+        var registros = service.buscarPorNomeCategoria(nomeCategoria);
+        var dtos = registros.stream().map(mapper::toGetDto).toList();
+        return ResponseEntity.ok(dtos);
+    }
+
     @GetMapping("/promocoes")
     public ResponseEntity<List<ProdutoGetDto>> buscarPromocoes() {
         var registros = service.buscarPromocoes();
         return ResponseEntity.ok(registros.stream().map(mapper::toGetDto).toList());
+    }
+
+    // 🆕 NOVO: Buscar produtos recentes
+    @GetMapping("/recentes")
+    public ResponseEntity<List<ProdutoGetDto>> buscarRecentes(
+        @RequestParam(defaultValue = "10") int limite
+    ) {
+        var registros = service.buscarRecentes(limite);
+        var dtos = registros.stream().map(mapper::toGetDto).toList();
+        return ResponseEntity.ok(dtos);
+    }
+
+    // 🆕 NOVO: Buscar todos os produtos (para catálogo geral)
+    @GetMapping("/todos")
+    public ResponseEntity<List<ProdutoGetDto>> buscarTodos() {
+        var registros = service.buscarTodos();
+        var dtos = registros.stream().map(mapper::toGetDto).toList();
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/filtrar")
