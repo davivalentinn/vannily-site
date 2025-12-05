@@ -194,8 +194,8 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="w-full px-1 bg-primary">
-      <nav className="w-full max-w-7xl h-22 items-center flex justify-between px-1 mx-auto gap-4">
+    <header className="w-full bg-primary">
+      <nav className="w-full max-w-7xl h-22 items-center flex justify-between mx-auto gap-4">
         {/* Logo */}
         <div className="py-2 flex items-center gap-2 px-4 pb-1">
           {/* Menu Hambúrguer (mostra só no mobile) - MOVIDO PARA ANTES DA LOGO */}

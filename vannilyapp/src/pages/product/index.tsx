@@ -20,7 +20,7 @@ export function ProductPage() {
   const [loading, setLoading] = useState(true);
   const [quantidade, setQuantidade] = useState(1);
   const { isAuthenticated } = useAuth();
-  
+
 
   const toggleFavorite = (productId: number) => {
     // Verifica se está logado
@@ -38,6 +38,28 @@ export function ProductPage() {
   };
 
   useEffect(() => {
+    const hash = window.location.hash; // ex: "#product"
+    if (!hash) return;
+
+    let tries = 0;
+    const maxTries = 30; // até 30 * 100ms = 3s
+    const interval = setInterval(() => {
+      const el = document.querySelector(hash);
+      if (el) {
+        // se tiver header fixo, ajuste o offset (ex: 80px)
+        const headerOffset = 200;
+        const y = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+        window.scrollTo({ top: y, behavior: "smooth" });
+        clearInterval(interval);
+      } else if (++tries >= maxTries) {
+        clearInterval(interval);
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
     if (!id) return;
 
     async function carregarProduto() {
@@ -52,7 +74,7 @@ export function ProductPage() {
     carregarProduto();
   }, [id]);
 
-  if (loading) return <LoadingCart/>;
+  if (loading) return <LoadingCart />;
   if (!produto) return <p className="p-10 text-center">Produto não encontrado.</p>;
 
   const precoOriginal =
@@ -75,7 +97,7 @@ export function ProductPage() {
         />
 
         {/* Imagem */}
-        <div className="bg-gray-50 rounded-lg p-8 flex items-center justify-center">
+        <div id="product-url" className="bg-gray-50 rounded-lg p-8 flex items-center justify-center">
           <img
             src={produto.imagem}
             alt={produto.nome}

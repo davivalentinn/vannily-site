@@ -159,7 +159,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                     {visibleProducts.map((product) => (
                         <Link
                             key={product.id}
-                            to={`/produto/${product.id}`}
+                            to={`/produto/${product.id}#product-url`}
                             className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 h-[520px] flex flex-col group"
                         >
                             {/* Imagem */}

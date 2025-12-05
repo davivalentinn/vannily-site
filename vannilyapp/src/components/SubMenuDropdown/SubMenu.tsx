@@ -4,8 +4,8 @@ import { catalogoItems, modaGeekItems, boardGamesItems } from './menuData';
 import { Link } from 'react-router-dom';
 export const SubMenu: React.FC = () => {
   return (
-    <div className="w-full bg-background border-gray-200">
-      <div className="container mx-auto max-w-7xl px-4">
+    <div className="w-full bg-background">
+      <div className="container mx-auto max-w-7xl px-1">
         <div className="flex items-center justify-between py-1">
           {/* Categorias - Esquerda */}
           <div className="flex items-center gap-6">

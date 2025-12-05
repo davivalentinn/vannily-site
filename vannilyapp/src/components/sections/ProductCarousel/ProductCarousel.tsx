@@ -170,7 +170,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
                                     <Heart className={`w-6 h-6 ${favorites.includes(currentProduct.id) ? 'fill-current' : ''}`} />
                                 </IconButton>
 
-                                <Link to={`/produto/${currentProduct.id}`} className="flex-1">
+                                <Link to={`/produto/${currentProduct.id}#product-url`} className="flex-1">
                                     <Button
                                         variant="button"
                                         size="md"
