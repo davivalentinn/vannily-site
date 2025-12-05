@@ -191,7 +191,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
                                 disabled={produtos.length <= 1}
                                 className="z-10 p-2 rounded-full bg-white shadow-lg hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                <ChevronLeft className="w-6 h-6 text-gray-700" />
+                                <ChevronLeft className="w-6 h-6 text-gray-700 hidden md:block" />
                             </button>
 
                             <div className="flex items-center gap-4 overflow-hidden">

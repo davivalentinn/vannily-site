@@ -9,10 +9,11 @@ import NewsLetterSection from "../sections/NewsLetter";
 export function Layout(){
     return(
         <>
+       
             <Header/>
-            <Outlet/>
-            <NewsLetterSection/>
-            <Footer/>
+            <Outlet/> 
+            <NewsLetterSection/> 
+            <Footer/> 
         </>
     )
 }

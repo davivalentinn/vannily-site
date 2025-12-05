@@ -137,7 +137,7 @@ export function Search() {
   }
 
   return (
-    <div className="min-w-[800px] relative" ref={containerRef}>
+    <div className="w-full relative" ref={containerRef}>
       <form onSubmit={e => e.preventDefault()} className="relative">
         <input
           type="text"
@@ -213,4 +213,3 @@ export function Search() {
     </div>
   );
 }
-    

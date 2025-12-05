@@ -15,7 +15,7 @@ export const CarouselControls: React.FC<CarouselControlsProps> = ({
     onNext
 }) => {
     return (
-        <div className="absolute inset-0 max-w-7xl mx-auto px-4 pointer-events-none ">
+        <div className="hidden md:block absolute inset-0 max-w-7xl mx-auto px-4 pointer-events-none ">
             {/* Botão Anterior */}
             <button
                 onClick={onPrevious}
