@@ -241,8 +241,8 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({
                                         key={index}
                                         onClick={() => setCurrentIndex(index)}
                                         className={`h-2 rounded-full transition-all ${index === currentIndex
-                                                ? 'w-8 bg-background'
-                                                : 'w-2 bg-gray-300 hover:bg-background/90'
+                                            ? 'w-8 bg-background'
+                                            : 'w-2 bg-gray-300 hover:bg-background/90'
                                             }`}
                                     />
                                 ))}

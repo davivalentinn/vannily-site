@@ -8,6 +8,8 @@ import { ShoppingCart, Heart } from "lucide-react";
 import { Button, IconButton } from "../../components/ui";
 import LoginModal from "../../features/auth/components/LoginModal";
 import { useAuth } from "../../context/authContext";
+import LoadingCart from "../../components/Loading/LoadingCart";
+import LoadingDots from "../../components/Loading/LoadingDots";
 
 export function ProductPage() {
   const { id } = useParams();
@@ -50,7 +52,7 @@ export function ProductPage() {
     carregarProduto();
   }, [id]);
 
-  if (loading) return <p className="p-10 text-center">Carregando...</p>;
+  if (loading) return <LoadingCart/>;
   if (!produto) return <p className="p-10 text-center">Produto não encontrado.</p>;
 
   const precoOriginal =

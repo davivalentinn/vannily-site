@@ -28,9 +28,9 @@ export const NewsLetterSection = () => {
     }
     return (
         <section className="w-full bg-black/95 bg-cover bg-center bg-no-repeat py-16 px-4"
-            style={{
-                backgroundImage: `url(${bgImage})`,
-            }}
+            // style={{
+            //     backgroundImage: `url(${bgImage})`,
+            // }}
         >
             <div className="flex justify-center items-center">
                 <div className="flex items-center justify-center p-2 py-4">

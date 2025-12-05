@@ -88,7 +88,7 @@ export function Home() {
                 fetchFunction={() => listarProdutosPorNomeCategoria("Jogos de Cartas")}
             />
 
-            <NewsLetterSection />
+            
 
             <ProductSlider
                 title="Promoções Imperdíveis"

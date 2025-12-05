@@ -11,6 +11,12 @@ import { ChevronLeft, ChevronRight, Heart, Users, Clock } from "lucide-react";
 import { Button } from "../../ui";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import LoginModal from "../../../features/auth/components/LoginModal/LoginModal";
+import LoadingAnimation from "../../Loading/LoadingAnimation";
+import LoadingBar from "../../Loading/LoadingBar";
+import LoadingDots from "../../Loading/LoadingDots";
+import LoadingCart from "../../Loading/LoadingCart";
+import ProductGridShimmer from "../../Loading/SkeletonLoading/ProductGridShimmer";
+import ProductGridSkeleton from "../../Loading/SkeletonLoading/ProductGridSkeleton";
 
 interface ProductSliderProps {
     title: string;
@@ -109,7 +115,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
     const visibleProducts = produtos.slice(startIndex, startIndex + itemsPerView);
 
     if (loading)
-        return <p className="text-center p-10">Carregando produtos...</p>;
+        return <ProductGridSkeleton count={4}/>;
 
     if (produtos.length === 0)
         return null;
