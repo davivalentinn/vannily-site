@@ -27,42 +27,60 @@ export const NewsLetterSection = () => {
         setEmail("");
     }
     return (
-        <section className="w-full bg-black/95 bg-cover bg-center bg-no-repeat py-16 px-4"
-            // style={{
-            //     backgroundImage: `url(${bgImage})`,
-            // }}
+        <section className="w-full bg-black/95 bg-cover bg-center bg-no-repeat py-8 sm:py-12 lg:py-16 px-4"
+        style={{
+            backgroundImage: `url(${bgImage})`,
+        }}
         >
-            <div className="flex justify-center items-center">
-                <div className="flex items-center justify-center p-2 py-4">
+            <div className="max-w-7xl mx-auto flex flex-col lg:flex-row justify-center items-center gap-6 lg:gap-8">
+                {/* Logo */}
+                <div className="flex items-center justify-center p-2 py-4 flex-shrink-0">
                     <Link to="/">
-                        <img className="h-40" src="/logo.svg" alt="Logo" />
+                        <img className="h-24 sm:h-32 lg:h-40" src="/logo.svg" alt="Logo" />
                     </Link>
                 </div>
 
-                <form className="p-5">
-                    <div className="flex flex-col">
-                        <h2 className="text-title text-2xl shadow-md">Não fique de fora!</h2>
-                        <p className="text-white text-xl mb-4 uppercase font-bold">Receba notificações de nossas promoções, lançamentos e eventos!</p>
+                {/* Form */}
+                <form className="w-full max-w-3xl p-4 sm:p-5">
+                    <div className="flex flex-col mb-4 sm:mb-6">
+                        <h2 className="text-white md:text-title text-xl sm:text-2xl lg:text-3xl shadow-md mb-2">
+                            Não fique de fora!
+                        </h2>
+                        <p className="text-white text-sm sm:text-base lg:text-xl uppercase font-bold">
+                            Receba notificações de nossas promoções, lançamentos e eventos!
+                        </p>
                     </div>
 
-                    <div className="flex gap-2">
-                        <input type="text" placeholder="Informe seu nome"
+                    {/* Inputs - Stack em mobile, row em desktop */}
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-2">
+                        <input
+                            type="text"
+                            placeholder="Informe seu nome"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="outline-none p-2 px-4 rounded-md font-montserrat"
+                            className="w-full outline-none p-3 sm:p-2 px-4 rounded-md font-montserrat text-sm sm:text-base"
                         />
-                        <input type="email" placeholder="Informe seu email"
+                        <input
+                            type="email"
+                            placeholder="Informe seu email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="outline-none p-2 px-4 rounded-md font-montserrat"
+                            className="w-full outline-none p-3 sm:p-2 px-4 rounded-md font-montserrat text-sm sm:text-base"
                         />
-                        <button type="submit" onClick={handleSubmit} className="bg-title text-white p-2 px-4 rounded-md font-montserrat font-bold hover:bg-title/90 hover:shadow-lg">Enviar agora</button>
+                        <button
+                            type="submit"
+                            onClick={handleSubmit}
+                            className="w-full sm:w-auto bg-title text-white p-3 sm:p-2 px-6 sm:px-4 rounded-md font-montserrat font-bold hover:bg-title/90 hover:shadow-lg transition-all whitespace-nowrap text-sm sm:text-base"
+                        >
+                            Enviar agora
+                        </button>
                     </div>
 
+                    {/* Error Message */}
                     {error && (
-                        <div className="mt-4 flex items-start gap-3 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow-lg animate-[slideIn_0.3s_ease-out]">
+                        <div className="mt-4 flex items-start gap-3 bg-red-50 border-l-4 border-red-500 p-3 sm:p-4 rounded-lg shadow-lg animate-[slideIn_0.3s_ease-out]">
                             <svg
-                                className="w-6 h-6 text-red-500 flex-shrink-0 mt-0.5"
+                                className="w-5 h-5 sm:w-6 sm:h-6 text-red-500 flex-shrink-0 mt-0.5"
                                 fill="currentColor"
                                 viewBox="0 0 20 20"
                             >
@@ -73,7 +91,7 @@ export const NewsLetterSection = () => {
                                 />
                             </svg>
                             <div className="flex-1">
-                                <p className="text-red-700 font-semibold">
+                                <p className="text-red-700 font-semibold text-sm sm:text-base">
                                     {error}
                                 </p>
                             </div>
@@ -82,17 +100,17 @@ export const NewsLetterSection = () => {
                 </form>
             </div>
             <style>{`
-                @keyframes slideIn {
-                    from {
-                        opacity: 0;
-                        transform: translateY(-10px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
                 }
-            `}</style>
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `}</style>
         </section>
     )
 }

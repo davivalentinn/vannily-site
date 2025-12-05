@@ -84,7 +84,7 @@ const MobileSidebar = ({ isOpen, onClose, isAuthenticated }) => {
               className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
               onClick={onClose}
             >
-              <Heart className="w-5 h-5 text-purple-600" />
+              <Heart className="w-5 h-5 text-title" />
               <span className="font-medium text-gray-800">Favoritos</span>
             </Link>
 
@@ -93,7 +93,7 @@ const MobileSidebar = ({ isOpen, onClose, isAuthenticated }) => {
               className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
               onClick={onClose}
             >
-              <ShoppingCart className="w-5 h-5 text-blue-600" />
+              <ShoppingCart className="w-5 h-5 text-title" />
               <span className="font-medium text-gray-800">Carrinho</span>
             </Link>
           </div>

@@ -6,9 +6,9 @@ export function Footer() {
     return (
         <footer
             className="w-full bg-black bg-cover bg-center bg-no-repeat py-16 px-4"
-            style={{
-                backgroundImage: `url(${bgImage})`,
-            }}
+            // style={{
+            //     backgroundImage: `url(${bgImage})`,
+            // }}
         >
             
             <div className="max-w-7xl mx-auto">

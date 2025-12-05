@@ -23,6 +23,7 @@ export const CarouselSlideComponent: React.FC<CarouselSlideProps> = ({
         alt={slide.alt}
         className="w-full h-full object-cover"
         loading="lazy"
+        draggable="false"
       />
       
     </div>
