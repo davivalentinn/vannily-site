@@ -11,6 +11,7 @@ import {
     listarTodosProdutos
 } from "../../services/produto-service";
 import { ModaGeekSection } from "../../components/sections/ModaGeek";
+import NewsLetterSection from "../../components/sections/NewsLetter";
 
 export function Home() {
     const [produtosCarousel, setProdutosCarousel] = useState<ProdutoCompleto[]>([]);
@@ -87,7 +88,12 @@ export function Home() {
                 fetchFunction={() => listarProdutosPorNomeCategoria("Jogos de Cartas")}
             />
 
+            <NewsLetterSection />
 
+            <ProductSlider
+                title="Promoções Imperdíveis"
+                fetchFunction={listarPromocoes}
+            />
         </>
     );
 }

@@ -12,7 +12,7 @@ export default {
         background: '#8B1689',
         bar: '#CA2BC7',
         productCarousel: "#e83cff",
-        title: '#A61EA4'
+        title: '#CA2BC7'
       },
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],

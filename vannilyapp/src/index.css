@@ -13,10 +13,6 @@
     @apply font-roboto font-medium text-white;
   }
 
-  input[type="text"] {
-    @apply font-roboto font-normal
-  }
-
   i {
     @apply text-xl text-white
   }
