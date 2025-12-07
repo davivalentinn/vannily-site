@@ -44,6 +44,8 @@ public class TokenFilter extends OncePerRequestFilter {
                 path.startsWith("/produto-roupa/consultar/") ||
                 path.startsWith("/produto-jogo/consultar/") ||
                 method.equals("OPTIONS");
+        
+        // ⚠️ NÃO incluir /carrinho aqui - ele precisa de autenticação
     }
 
     @Override
@@ -66,6 +68,7 @@ public class TokenFilter extends OncePerRequestFilter {
                 }
             } catch (Exception e) {
                 // Token inválido - continuar sem autenticação
+                System.err.println("Erro ao validar token: " + e.getMessage());
             }
         }
 

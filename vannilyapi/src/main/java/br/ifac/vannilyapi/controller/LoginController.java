@@ -42,6 +42,7 @@ public class LoginController {
         var token = tokenService.criarToken(usuarioAutenticado);
 
         var dto = new LoginGetDto(
+                usuarioAutenticado.getId(),
                 token,
                 usuarioAutenticado.getEmail(),
                 usuarioAutenticado.getNome(),

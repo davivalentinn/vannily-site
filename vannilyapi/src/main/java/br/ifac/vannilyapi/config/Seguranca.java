@@ -55,6 +55,12 @@ public class Seguranca {
                     req.requestMatchers(HttpMethod.GET, "/produto-roupa/consultar/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/produto-jogo/consultar/**").permitAll();
 
+                    // ✅ Endpoints do carrinho - REQUER AUTENTICAÇÃO
+                    req.requestMatchers(HttpMethod.GET, "/carrinho/**").authenticated();
+                    req.requestMatchers(HttpMethod.POST, "/carrinho/**").authenticated();
+                    req.requestMatchers(HttpMethod.PUT, "/carrinho/**").authenticated();
+                    req.requestMatchers(HttpMethod.DELETE, "/carrinho/**").authenticated();
+
                     // 🔒 Todo o resto requer autenticação
                     req.anyRequest().authenticated();
                 })

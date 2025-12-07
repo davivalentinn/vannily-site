@@ -20,12 +20,18 @@ public class PerfilUsuario implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (usuario.getTipoUsuario() != null) {
+
+            // ADMIN também é USER
+            if (usuario.getTipoUsuario().name().equals("ADMIN")) {
+                return List.of(
+                        new SimpleGrantedAuthority("ROLE_ADMIN"),
+                        new SimpleGrantedAuthority("ROLE_USER"));
+            }
+
             return List.of(
-                new SimpleGrantedAuthority("ROLE_" + usuario.getTipoUsuario().name())
-            );
+                    new SimpleGrantedAuthority("ROLE_" + usuario.getTipoUsuario().name()));
         }
 
-        // Default: usuário comum
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
@@ -40,16 +46,24 @@ public class PerfilUsuario implements UserDetails {
     }
 
     @Override
-    public boolean isAccountNonExpired() { return true; }
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
     @Override
-    public boolean isAccountNonLocked() { return true; }
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
     @Override
-    public boolean isCredentialsNonExpired() { return true; }
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
     @Override
-    public boolean isEnabled() { return true; }
+    public boolean isEnabled() {
+        return true;
+    }
 
     public Usuario getUsuario() {
         return usuario;
