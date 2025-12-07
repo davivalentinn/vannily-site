@@ -48,7 +48,8 @@ export default function LoginForm() {
       senha: formData.password,
     });
 
-    login(response.token, response.nome);
+    login(response.token, response.nome, response.id);
+
 
     navigate("/");
   } catch (err: any) {

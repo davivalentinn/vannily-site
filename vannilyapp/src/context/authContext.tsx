@@ -1,60 +1,70 @@
+// context/AuthContext.tsx
 import { createContext, useContext, useState, useCallback, useEffect } from "react";
 import type { ReactNode } from "react";
 
 interface AuthContextProps {
   token: string | null;
   user: string | null;
+  userId: number | null;
   isAuthenticated: boolean;
-  login: (token: string, user: string) => void;
+  login: (token: string, user: string, id: number) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setTokenState] = useState<string | null>(() =>
-    localStorage.getItem("token")
-  );
+  const [token, setToken] = useState(() => localStorage.getItem("token"));
+  const [user, setUser] = useState(() => localStorage.getItem("usuario"));
+  const [userId, setUserId] = useState<number | null>(() => {
+    const storedId = localStorage.getItem("id");
+    return storedId ? Number(storedId) : null;
+  });
 
-  const [user, setUserState] = useState<string | null>(() =>
-    localStorage.getItem("usuario")
-  );
-
-  // Sincronizar token com localStorage automaticamente
+  // sincroniza token
   useEffect(() => {
     if (token) localStorage.setItem("token", token);
     else localStorage.removeItem("token");
   }, [token]);
 
-  // Sincronizar usuário com localStorage automaticamente
+  // sincroniza usuário
   useEffect(() => {
     if (user) localStorage.setItem("usuario", user);
     else localStorage.removeItem("usuario");
   }, [user]);
 
-  const login = useCallback((newToken: string, newUser: string) => {
-    setTokenState(newToken);
-    setUserState(newUser);
+  // sincroniza ID
+  useEffect(() => {
+    if (userId !== null) localStorage.setItem("id", String(userId));
+    else localStorage.removeItem("id");
+  }, [userId]);
+
+  const login = useCallback((newToken: string, newUser: string, id: number) => {
+    setToken(newToken);
+    setUser(newUser);
+    setUserId(id);
   }, []);
 
   const logout = useCallback(() => {
-    setTokenState(null);
-    setUserState(null);
-    localStorage.removeItem("token");
-    localStorage.removeItem("usuario");
+    setToken(null);
+    setUser(null);
+    setUserId(null);
+    localStorage.clear();
   }, []);
 
-  const isAuthenticated = !!token && !!user;
+  const isAuthenticated = !!token && !!user && userId !== null;
 
   return (
-    <AuthContext.Provider value={{ token, user, isAuthenticated, login, logout }}>
+    <AuthContext.Provider
+      value={{ token, user, userId, isAuthenticated, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth deve ser usado dentro de AuthProvider");
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth deve ser usado dentro de AuthProvider");
+  return ctx;
 }

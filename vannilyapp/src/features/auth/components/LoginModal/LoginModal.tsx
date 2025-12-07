@@ -1,8 +1,9 @@
 // src/components/LoginModal/LoginModal.tsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, LogIn, UserPlus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../../../components/ui';
+import { useAuth } from '../../../../context/authContext'; // <-- IMPORTANTE
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -16,8 +17,16 @@ const LoginModal: React.FC<LoginModalProps> = ({
   message = "Você precisa estar logado para realizar esta ação."
 }) => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();   // <-- LÊ O CONTEXTO
 
-  if (!isOpen) return null;
+  // Se estiver autenticado, fecha automático
+  useEffect(() => {
+    if (isAuthenticated && isOpen) {
+      onClose();
+    }
+  }, [isAuthenticated, isOpen, onClose]);
+
+  if (!isOpen || isAuthenticated) return null;
 
   const handleLogin = () => {
     onClose();

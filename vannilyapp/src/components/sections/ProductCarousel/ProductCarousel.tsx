@@ -4,7 +4,7 @@ import { Button, IconButton } from '../../ui';
 import backgroundImage from '../../../assets/images/background/carousel-bg.png';
 import { Link } from 'react-router-dom';
 import type { ProdutoCompleto } from '../../../services/produto-service';
-import { useAuth } from '../../../features/auth/hooks/useAuth';
+import { useAuth } from '../../../context/authContext';
 import LoginModal from '../../../features/auth/components/LoginModal/LoginModal';
 
 
