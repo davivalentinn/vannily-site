@@ -1,6 +1,7 @@
 package br.ifac.vannilyapi.config;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,36 +22,36 @@ public class TokenFilter extends OncePerRequestFilter {
     private final TokenService tokenService;
     private final UserDetailsService userDetailsService;
 
+    // Rotas públicas
+    private static final List<String> PUBLICAS = List.of(
+            "/login/autenticar",
+            "/usuarios/inserir",
+            "/produto",
+            "/produto-roupa",
+            "/produto-jogo"
+    );
+
     public TokenFilter(TokenService tokenService, @Lazy UserDetailsService userDetailsService) {
         this.tokenService = tokenService;
         this.userDetailsService = userDetailsService;
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
         String method = request.getMethod();
 
-        // NÃO aplicar filtro para rotas públicas
-        return path.equals("/login/autenticar") ||
-                (path.equals("/usuarios/inserir") && method.equals("POST")) ||
-                path.startsWith("/produto/consultar") ||
-                path.startsWith("/produto/promocoes") ||
-                path.startsWith("/produto/categoria/") ||          
-                path.startsWith("/produto/recentes") ||           
-                path.startsWith("/produto/todos") ||              
-                path.startsWith("/produto/filtrar") ||             
-                path.startsWith("/produto/completo/") ||
-                path.startsWith("/produto-roupa/consultar/") ||
-                path.startsWith("/produto-jogo/consultar/") ||
-                method.equals("OPTIONS");
-        
-        // ⚠️ NÃO incluir /carrinho aqui - ele precisa de autenticação
+        if (method.equals("OPTIONS")) return true;
+
+        // qualquer rota que comece com uma pública
+        return PUBLICAS.stream().anyMatch(path::startsWith);
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
 
         String token = recuperarToken(request);
 
@@ -67,7 +68,6 @@ public class TokenFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             } catch (Exception e) {
-                // Token inválido - continuar sem autenticação
                 System.err.println("Erro ao validar token: " + e.getMessage());
             }
         }
@@ -76,10 +76,10 @@ public class TokenFilter extends OncePerRequestFilter {
     }
 
     private String recuperarToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
+        String header = request.getHeader("Authorization");
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.substring(7);
         }
 
         return null;

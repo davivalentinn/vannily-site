@@ -7,6 +7,12 @@ import {
     type ProdutoCompleto
 } from "../../../services/produto-service";
 
+import {
+    adicionarFavorito,
+    removerFavorito,
+    listarFavoritos
+} from "../../../services/favoritarService";
+
 import { ChevronLeft, ChevronRight, Heart, Users, Clock } from "lucide-react";
 import { Button } from "../../ui";
 import { useAuth } from "../../../context/authContext";
@@ -29,11 +35,12 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
     const [favorites, setFavorites] = useState<number[]>([]);
     const [produtos, setProdutos] = useState<ProdutoCompleto[]>([]);
     const [loading, setLoading] = useState(true);
+    const [loadingFavorites, setLoadingFavorites] = useState(false);
 
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [loginMessage, setLoginMessage] = useState("");
 
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, user, userId } = useAuth(); // Adiciona userId
     const { addItem } = useCart();
 
     // 🔹 Carregar produtos
@@ -50,7 +57,8 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                 }
 
                 setProdutos(completos);
-            } catch {
+            } catch (error) {
+                console.error("Erro ao carregar produtos:", error);
                 setProdutos([]);
             } finally {
                 setLoading(false);
@@ -60,6 +68,36 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
         carregar();
     }, [fetchFunction]);
 
+    // 🔹 Carregar favoritos do usuário
+    useEffect(() => {
+        async function carregarFavoritos() {
+            if (!isAuthenticated || !userId) {
+                setFavorites([]);
+                return;
+            }
+
+            setLoadingFavorites(true);
+            try {
+                const favoritosUsuario = await listarFavoritos(userId);
+                const produtoIds = favoritosUsuario.map(fav => fav.produtoId);
+                setFavorites(produtoIds);
+            } catch (error: any) {
+                console.error("Erro ao carregar favoritos:", error);
+                
+                // Se for erro 401/403, pode ser token inválido
+                if (error?.response?.status === 401 || error?.response?.status === 403) {
+                    console.warn("Token inválido ou expirado ao carregar favoritos");
+                }
+                
+                setFavorites([]);
+            } finally {
+                setLoadingFavorites(false);
+            }
+        }
+
+        carregarFavoritos();
+    }, [isAuthenticated, userId]);
+
     const handlePrev = () => setStartIndex(prev => Math.max(0, prev - 1));
 
     const handleNext = () =>
@@ -67,22 +105,58 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
             Math.min(produtos.length - itemsPerView, prev + 1)
         );
 
-    // 🔹 Favoritar
-    const toggleFavorite = (e: React.MouseEvent, productId: number) => {
+    // 🔹 Favoritar/Desfavoritar com API
+    const toggleFavorite = async (e: React.MouseEvent, productId: number) => {
         e.preventDefault();
         e.stopPropagation();
 
-        if (!isAuthenticated) {
+        if (!isAuthenticated || !userId) {
             setLoginMessage("Você precisa estar logado para adicionar produtos aos favoritos.");
             setShowLoginModal(true);
             return;
         }
 
+        const isFavorited = favorites.includes(productId);
+
+        // Atualização otimista da UI
         setFavorites(prev =>
-            prev.includes(productId)
+            isFavorited
                 ? prev.filter(id => id !== productId)
                 : [...prev, productId]
         );
+
+        try {
+            if (isFavorited) {
+                // Remover dos favoritos
+                await removerFavorito(userId, productId);
+            } else {
+                // Adicionar aos favoritos
+                await adicionarFavorito({
+                    usuarioId: userId,
+                    produtoId: productId
+                });
+            }
+        } catch (error: any) {
+            console.error("Erro ao atualizar favorito:", error);
+            
+            // Reverter em caso de erro
+            setFavorites(prev =>
+                isFavorited
+                    ? [...prev, productId]
+                    : prev.filter(id => id !== productId)
+            );
+
+            // Mensagens de erro específicas
+            if (error?.response?.status === 403) {
+                setLoginMessage("Sua sessão expirou. Por favor, faça login novamente.");
+                setShowLoginModal(true);
+            } else if (error?.response?.status === 401) {
+                setLoginMessage("Você precisa estar logado para adicionar produtos aos favoritos.");
+                setShowLoginModal(true);
+            } else {
+                alert("Erro ao atualizar favoritos. Tente novamente.");
+            }
+        }
     };
 
     // 🔹 Adicionar ao carrinho
@@ -96,7 +170,12 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
             return;
         }
 
-        await addItem(productId, 1);
+        try {
+            await addItem(productId, 1);
+        } catch (error) {
+            console.error("Erro ao adicionar ao carrinho:", error);
+            alert("Erro ao adicionar produto ao carrinho. Tente novamente.");
+        }
     };
 
     const formatPrice = (price: number) => price.toFixed(2).replace(".", ",");
@@ -134,7 +213,8 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                         <button
                             onClick={handlePrev}
                             disabled={startIndex === 0}
-                            className="p-2 rounded-full bg-white shadow hover:bg-gray-100 disabled:opacity-50"
+                            className="p-2 rounded-full bg-white shadow hover:bg-gray-100 disabled:opacity-50 transition-all"
+                            aria-label="Produto anterior"
                         >
                             <ChevronLeft className="w-6 h-6" />
                         </button>
@@ -142,7 +222,8 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                         <button
                             onClick={handleNext}
                             disabled={startIndex >= produtos.length - itemsPerView}
-                            className="p-2 rounded-full bg-white shadow hover:bg-gray-100 disabled:opacity-50"
+                            className="p-2 rounded-full bg-white shadow hover:bg-gray-100 disabled:opacity-50 transition-all"
+                            aria-label="Próximo produto"
                         >
                             <ChevronRight className="w-6 h-6" />
                         </button>
@@ -167,7 +248,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
 
                                 {/* Badge Desconto */}
                                 {product.desconto > 0 && (
-                                    <div className="absolute top-2 left-2 bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full">
+                                    <div className="absolute top-2 left-2 bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full shadow-md">
                                         -{product.desconto}%
                                     </div>
                                 )}
@@ -175,29 +256,32 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                                 {/* Favorito */}
                                 <button
                                     onClick={(e) => toggleFavorite(e, product.id)}
-                                    className="absolute top-3 right-3 p-2 bg-white rounded-full shadow"
+                                    disabled={loadingFavorites}
+                                    className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                    aria-label={favorites.includes(product.id) ? "Remover dos favoritos" : "Adicionar aos favoritos"}
                                 >
                                     <Heart
-                                        className={`w-5 h-5 ${favorites.includes(product.id)
-                                            ? "fill-red-500 text-red-500"
-                                            : "text-gray-400"
-                                            }`}
+                                        className={`w-5 h-5 transition-all ${
+                                            favorites.includes(product.id)
+                                                ? "fill-red-500 text-red-500"
+                                                : "text-gray-400 hover:text-red-400"
+                                        }`}
                                     />
                                 </button>
 
                                 {/* Info extra de jogos */}
                                 {product.jogo && (
                                     <div className="absolute top-16 right-3 flex-col gap-2 hidden md:flex">
-                                        <div className="bg-white border-2 rounded-md p-2 w-12 text-xs font-bold text-center">
+                                        <div className="bg-white border-2 rounded-md p-2 w-12 text-xs font-bold text-center shadow-sm">
                                             {product.jogo.classificacaoIndicativa}
                                         </div>
 
-                                        <div className="bg-white border-2 rounded-md p-2 w-12 flex flex-col items-center">
+                                        <div className="bg-white border-2 rounded-md p-2 w-12 flex flex-col items-center shadow-sm">
                                             <Users className="w-4 h-4 text-background" />
                                             <span className="text-xs text-bar font-bold">{product.jogo.qtdPessoas}</span>
                                         </div>
 
-                                        <div className="bg-white border-2 rounded-md p-2 w-12 flex flex-col items-center">
+                                        <div className="bg-white border-2 rounded-md p-2 w-12 flex flex-col items-center shadow-sm">
                                             <Clock className="w-4 h-4 text-background" />
                                             <span className="text-xs text-bar font-bold">{product.jogo.duracao}</span>
                                         </div>
@@ -218,13 +302,17 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                                         {product.categoriaNome}
                                     </span>
 
-                                    <span className="px-3 py-1 bg-productCarousel/20 rounded-xl text-sm font-semibold text-bar">
-                                        {product.tema}
-                                    </span>
+                                    {product.tema && (
+                                        <span className="px-3 py-1 bg-productCarousel/20 rounded-xl text-sm font-semibold text-bar">
+                                            {product.tema}
+                                        </span>
+                                    )}
 
-                                    <span className="px-3 py-1 bg-productCarousel/20 rounded-xl text-sm font-semibold text-bar">
-                                        {product.genero}
-                                    </span>
+                                    {product.genero && (
+                                        <span className="px-3 py-1 bg-productCarousel/20 rounded-xl text-sm font-semibold text-bar">
+                                            {product.genero}
+                                        </span>
+                                    )}
                                 </div>
 
                                 {/* Preço + Botão */}
@@ -235,7 +323,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                                         </span>
 
                                         {product.desconto > 0 && (
-                                            <span className="text-gray-400 line-through">
+                                            <span className="text-gray-400 line-through text-sm">
                                                 R$ {formatPrice(product.preco + product.desconto)}
                                             </span>
                                         )}
@@ -262,7 +350,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                             <Link
                                 key={product.id}
                                 to={`/produto/${product.id}`}
-                                className="bg-white rounded-lg shadow border flex flex-col flex-shrink-0 w-[160px]"
+                                className="bg-white rounded-lg shadow border flex flex-col flex-shrink-0 w-[160px] hover:shadow-md transition-shadow"
                             >
                                 <div className="relative h-32 bg-gray-50 flex items-center justify-center p-2">
                                     <img
@@ -276,6 +364,22 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                                             -{product.desconto}%
                                         </div>
                                     )}
+
+                                    {/* Favorito Mobile */}
+                                    <button
+                                        onClick={(e) => toggleFavorite(e, product.id)}
+                                        disabled={loadingFavorites}
+                                        className="absolute top-2 right-2 p-1 bg-white rounded-full shadow-md disabled:opacity-50"
+                                        aria-label={favorites.includes(product.id) ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+                                    >
+                                        <Heart
+                                            className={`w-4 h-4 ${
+                                                favorites.includes(product.id)
+                                                    ? "fill-red-500 text-red-500"
+                                                    : "text-gray-400"
+                                            }`}
+                                        />
+                                    </button>
                                 </div>
 
                                 <div className="p-3 flex flex-col flex-1">

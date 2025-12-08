@@ -22,51 +22,47 @@ public class Seguranca {
 
     private final TokenFilter tokenFilter;
 
-    // ✅ @Lazy quebra o ciclo de dependência
     public Seguranca(@Lazy TokenFilter tokenFilter) {
         this.tokenFilter = tokenFilter;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         return http
                 .cors(cors -> {})
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
                 .authorizeHttpRequests(req -> {
-                    // ✅ OPTIONS (preflight CORS)
+
+                    // -----------------------
+                    // 📌 ROTAS PÚBLICAS
+                    // -----------------------
                     req.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                    
-                    // ✅ Autenticação e registro
+
+                    // Login / Registro
                     req.requestMatchers(HttpMethod.POST, "/login/autenticar").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/usuarios/inserir").permitAll();
-                    
-                    // ✅ Endpoints públicos de produtos
-                    req.requestMatchers(HttpMethod.GET, "/produto/consultar").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/produto/consultar/**").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/produto/promocoes").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/produto/categoria/**").permitAll();     
-                    req.requestMatchers(HttpMethod.GET, "/produto/recentes").permitAll();         
-                    req.requestMatchers(HttpMethod.GET, "/produto/todos").permitAll();            
-                    req.requestMatchers(HttpMethod.GET, "/produto/filtrar").permitAll();         
-                    req.requestMatchers(HttpMethod.GET, "/produto/completo/**").permitAll();
-                    
-                    // ✅ Endpoints de produto-roupa e produto-jogo
-                    req.requestMatchers(HttpMethod.GET, "/produto-roupa/consultar/**").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/produto-jogo/consultar/**").permitAll();
 
-                    // ✅ Endpoints do carrinho - REQUER AUTENTICAÇÃO
-                    req.requestMatchers(HttpMethod.GET, "/carrinho/**").authenticated();
-                    req.requestMatchers(HttpMethod.POST, "/carrinho/**").authenticated();
-                    req.requestMatchers(HttpMethod.PUT, "/carrinho/**").authenticated();
-                    req.requestMatchers(HttpMethod.DELETE, "/carrinho/**").authenticated();
+                    // Produtos (público)
+                    req.requestMatchers(HttpMethod.GET, "/produto/**").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/produto-roupa/**").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/produto-jogo/**").permitAll();
 
-                    // 🔒 Todo o resto requer autenticação
+                    // -----------------------
+                    // 📌 ROTAS QUE EXIGEM LOGIN
+                    // -----------------------
+                    req.requestMatchers("/carrinho/**").authenticated();
+                    req.requestMatchers("/favoritos/**").authenticated();
+
                     req.anyRequest().authenticated();
                 })
+
                 .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
