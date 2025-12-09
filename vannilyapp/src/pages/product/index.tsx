@@ -6,8 +6,15 @@ import {
   listarProdutosRecentes,
   type ProdutoCompleto,
 } from "../../services/produto-service";
+import { 
+  adicionarFavorito, 
+  removerFavorito, 
+  listarFavoritos 
+} from "../../services/favoritarService";
+import { 
+  adicionarItem 
+} from "../../services/cartService";
 import { ShoppingCart, Heart, Minus, Plus } from "lucide-react";
-import { Button, IconButton } from "../../components/ui";
 import LoginModal from "../../features/auth/components/LoginModal";
 import { useAuth } from "../../context/authContext";
 import LoadingCart from "../../components/Loading/LoadingCart";
@@ -23,20 +30,171 @@ export function ProductPage() {
   const [quantidade, setQuantidade] = useState(1);
   const [imagemSelecionada, setImagemSelecionada] = useState(0);
   const [tamanhoSelecionado, setTamanhoSelecionado] = useState("");
-  const { isAuthenticated } = useAuth();
+  const [adicionandoCarrinho, setAdicionandoCarrinho] = useState(false);
+  const [adicionandoFavorito, setAdicionandoFavorito] = useState(false);
+  const { isAuthenticated, user, userId } = useAuth();
 
-  const toggleFavorite = (productId: number) => {
-    if (!isAuthenticated) {
+  // Carregar favoritos do usuário
+  useEffect(() => {
+    if (isAuthenticated && userId) {
+      carregarFavoritos();
+    }
+  }, [isAuthenticated, userId]);
+
+  const carregarFavoritos = async () => {
+    if (!userId) return;
+    
+    try {
+      const favoritosData = await listarFavoritos(userId);
+      const favoritosIds = favoritosData.map(fav => fav.produtoId);
+      setFavorites(favoritosIds);
+    } catch (error) {
+      console.error("Erro ao carregar favoritos:", error);
+    }
+  };
+
+  const toggleFavorite = async (productId: number) => {
+    console.log('Toggle Favorito - UserID:', userId, 'ProductID:', productId);
+    
+    if (!isAuthenticated || !userId) {
       setLoginMessage("Você precisa estar logado para adicionar produtos aos favoritos.");
       setShowLoginModal(true);
       return;
     }
 
-    setFavorites((prev) =>
-      prev.includes(productId)
-        ? prev.filter((id) => id !== productId)
+    setAdicionandoFavorito(true);
+    
+    const isFavorito = favorites.includes(productId);
+    
+    // Atualização otimista da UI
+    setFavorites(prev =>
+      isFavorito
+        ? prev.filter(id => id !== productId)
         : [...prev, productId]
     );
+    
+    try {
+      console.log('É favorito?', isFavorito);
+      
+      if (isFavorito) {
+        console.log('Removendo favorito...');
+        await removerFavorito(userId, productId);
+        alert('Produto removido dos favoritos!');
+      } else {
+        console.log('Adicionando favorito...');
+        const result = await adicionarFavorito({
+          usuarioId: userId,
+          produtoId: productId,
+        });
+        console.log('Resultado:', result);
+        alert('Produto adicionado aos favoritos!');
+      }
+    } catch (error: any) {
+      console.error("Erro ao atualizar favorito:", error);
+      
+      // Reverter em caso de erro
+      setFavorites(prev =>
+        isFavorito
+          ? [...prev, productId]
+          : prev.filter(id => id !== productId)
+      );
+      
+      // Mensagens de erro específicas
+      if (error?.response?.status === 403) {
+        setLoginMessage("Sua sessão expirou. Por favor, faça login novamente.");
+        setShowLoginModal(true);
+      } else if (error?.response?.status === 401) {
+        setLoginMessage("Você precisa estar logado para adicionar produtos aos favoritos.");
+        setShowLoginModal(true);
+      } else {
+        alert(`Erro ao atualizar favoritos: ${error}`);
+      }
+    } finally {
+      setAdicionandoFavorito(false);
+    }
+  };
+
+  const adicionarAoCarrinho = async () => {
+    console.log('Adicionar ao Carrinho - UserID:', userId, 'ProductID:', produto?.id, 'Quantidade:', quantidade);
+    
+    if (!isAuthenticated || !userId) {
+      setLoginMessage("Você precisa estar logado para adicionar produtos ao carrinho.");
+      setShowLoginModal(true);
+      return;
+    }
+
+    if (!produto) {
+      console.error('Produto não encontrado');
+      return;
+    }
+
+    // Validação de tamanho para roupas
+    if (produto.roupa && !tamanhoSelecionado) {
+      alert("Por favor, selecione um tamanho antes de adicionar ao carrinho.");
+      return;
+    }
+
+    setAdicionandoCarrinho(true);
+
+    try {
+      console.log('Chamando adicionarItem...', { userId, produtoId: produto.id, quantidade });
+      const result = await adicionarItem(userId, produto.id, quantidade);
+      console.log('Resultado do carrinho:', result);
+      alert(`${quantidade} ${quantidade > 1 ? 'unidades adicionadas' : 'unidade adicionada'} ao carrinho!`);
+      setQuantidade(1); // Reset quantidade após adicionar
+    } catch (error: any) {
+      console.error("Erro ao adicionar ao carrinho:", error);
+      
+      if (error?.response?.status === 403) {
+        setLoginMessage("Sua sessão expirou. Por favor, faça login novamente.");
+        setShowLoginModal(true);
+      } else if (error?.response?.status === 401) {
+        setLoginMessage("Você precisa estar logado para adicionar produtos ao carrinho.");
+        setShowLoginModal(true);
+      } else {
+        alert(`Erro ao adicionar produto ao carrinho: ${error}`);
+      }
+    } finally {
+      setAdicionandoCarrinho(false);
+    }
+  };
+
+  const comprarAgora = async () => {
+    console.log('Comprar Agora - UserID:', userId, 'ProductID:', produto?.id);
+    
+    if (!isAuthenticated || !userId) {
+      setLoginMessage("Você precisa estar logado para realizar uma compra.");
+      setShowLoginModal(true);
+      return;
+    }
+
+    if (!produto) {
+      console.error('Produto não encontrado');
+      return;
+    }
+
+    // Validação de tamanho para roupas
+    if (produto.roupa && !tamanhoSelecionado) {
+      alert("Por favor, selecione um tamanho antes de continuar.");
+      return;
+    }
+
+    try {
+      console.log('Adicionando ao carrinho antes de redirecionar...');
+      const result = await adicionarItem(userId, produto.id, quantidade);
+      console.log('Produto adicionado:', result);
+      // Redirecionar para o carrinho ou checkout
+      window.location.href = "/carrinho";
+    } catch (error: any) {
+      console.error("Erro ao processar compra:", error);
+      
+      if (error?.response?.status === 403 || error?.response?.status === 401) {
+        setLoginMessage("Você precisa estar logado para realizar uma compra.");
+        setShowLoginModal(true);
+      } else {
+        alert(`Erro ao processar compra: ${error}`);
+      }
+    }
   };
 
   useEffect(() => {
@@ -154,7 +312,7 @@ export function ProductPage() {
                 <span className="text-4xl font-bold text-purple-600">
                   R$ {produto.preco.toFixed(2)}
                 </span>
-                {porcentagemDesconto > 0 && (
+                {produto.unidades > 0 && (
                   <span className="bg-green-500 text-white text-sm font-bold px-3 py-1 rounded">
                     EM ESTOQUE
                   </span>
@@ -180,7 +338,9 @@ export function ProductPage() {
             {/* Tamanhos */}
             {tamanhos.length > 0 && (
               <div>
-                <p className="font-semibold mb-3">Tamanhos:</p>
+                <p className="font-semibold mb-3">
+                  Tamanhos: {!tamanhoSelecionado && <span className="text-red-500 text-sm">*Obrigatório</span>}
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {tamanhos.map((tam) => (
                     <button
@@ -201,20 +361,19 @@ export function ProductPage() {
 
             {/* Botões de Ação */}
             <div className="flex gap-3 pt-4">
-              <Button
-                variant="button"
-                size="md"
-                className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-4 rounded"
+              <button
+                onClick={comprarAgora}
+                disabled={produto.unidades === 0}
+                className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-4 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                Comprar agora
-              </Button>
+                {produto.unidades === 0 ? 'Indisponível' : 'Comprar agora'}
+              </button>
               
-              <IconButton
-                variant="danger"
-                active={favorites.includes(produto.id)}
+              <button
                 onClick={() => toggleFavorite(produto.id)}
+                disabled={adicionandoFavorito}
                 aria-label="Adicionar aos favoritos"
-                className="w-14 h-14 border-2 border-purple-600 rounded flex items-center justify-center"
+                className="w-14 h-14 border-2 border-purple-600 rounded flex items-center justify-center disabled:opacity-50 hover:bg-purple-50 transition-colors"
               >
                 <Heart 
                   className={`w-6 h-6 ${
@@ -223,14 +382,15 @@ export function ProductPage() {
                       : 'text-purple-600'
                   }`} 
                 />
-              </IconButton>
+              </button>
               
-              <IconButton
-                variant="button"
-                className="w-14 h-14 bg-purple-600 hover:bg-purple-700 rounded flex items-center justify-center"
+              <button
+                onClick={adicionarAoCarrinho}
+                disabled={adicionandoCarrinho || produto.unidades === 0}
+                className="w-14 h-14 bg-purple-600 hover:bg-purple-700 rounded flex items-center justify-center disabled:opacity-50 transition-colors"
               >
                 <ShoppingCart className="w-6 h-6 text-white" />
-              </IconButton>
+              </button>
             </div>
 
             {/* Informações de Vendedor e Envio */}
@@ -240,6 +400,9 @@ export function ProductPage() {
               </p>
               <p>
                 <span className="font-semibold">Enviado por:</span> {produto.transportadora}
+              </p>
+              <p>
+                <span className="font-semibold">Unidades disponíveis:</span> {produto.unidades}
               </p>
             </div>
 
@@ -257,7 +420,8 @@ export function ProductPage() {
                   <span className="px-6 font-semibold">{quantidade}</span>
                   <button
                     className="px-4 py-2 hover:bg-gray-100"
-                    onClick={() => setQuantidade(q => q + 1)}
+                    onClick={() => setQuantidade(q => Math.min(produto.unidades, q + 1))}
+                    disabled={quantidade >= produto.unidades}
                   >
                     <Plus className="w-4 h-4" />
                   </button>
