@@ -29,37 +29,53 @@ export default function LoginForm() {
   };
 
   const handleSubmit = async () => {
-  setError(null);
+    setError(null);
 
-  const validationError = validateForm();
-  if (validationError) {
-    setError(validationError);
-    return;
-  }
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
 
-  setIsLoading(true);
+    setIsLoading(true);
 
-  try {
-    // limpa qualquer lixo de sessão antiga
-    localStorage.clear();
+    try {
+      // Limpa qualquer lixo de sessão antiga
+      localStorage.clear();
 
-    const response = await loginService({
-      email: formData.username,
-      senha: formData.password,
-    });
+      // Chamar serviço de login
+      const response = await loginService({
+        email: formData.username,
+        senha: formData.password,
+      });
 
-    login(response.token, response.nome, response.id);
+      console.log("✅ LOGIN RESPONSE:", response);
 
+      // ⭐ CORREÇÃO: Passar TODOS os 5 parâmetros
+      login(
+        response.token,      // 1. token
+        response.nome,       // 2. nome
+        response.id,         // 3. id
+        response.email,      // 4. email ⬅️ ESTAVA FALTANDO
+        response.tipoUsuario // 5. tipoUsuario ⬅️ ESTAVA FALTANDO
+      );
 
-    navigate("/");
-  } catch (err: any) {
-    console.error("Erro ao fazer login:", err);
-    setError(err.response?.data?.message || "Usuário ou senha inválidos");
-  } finally {
-    setIsLoading(false);
-  }
-};
+      console.log("✅ Dados salvos no localStorage:");
+      console.log("- token:", localStorage.getItem("token") ? "✅" : "❌");
+      console.log("- nome:", localStorage.getItem("nome"));
+      console.log("- userId:", localStorage.getItem("userId"));
+      console.log("- email:", localStorage.getItem("email"));
+      console.log("- tipoUsuario:", localStorage.getItem("tipoUsuario"));
 
+      // Redirecionar para home
+      navigate("/");
+    } catch (err: any) {
+      console.error("❌ Erro ao fazer login:", err);
+      setError(err.response?.data?.message || "Usuário ou senha inválidos");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") handleSubmit();

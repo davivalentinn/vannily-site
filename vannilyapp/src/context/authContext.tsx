@@ -7,7 +7,7 @@ interface AuthContextProps {
   user: string | null;
   userId: number | null;
   isAuthenticated: boolean;
-  login: (token: string, user: string, id: number) => void;
+  login: (token: string, nome: string, id: number, email: string, tipoUsuario: string) => void;
   logout: () => void;
 }
 
@@ -15,9 +15,9 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState(() => localStorage.getItem("token"));
-  const [user, setUser] = useState(() => localStorage.getItem("usuario"));
+  const [user, setUser] = useState(() => localStorage.getItem("nome")); // MUDOU: era "usuario"
   const [userId, setUserId] = useState<number | null>(() => {
-    const storedId = localStorage.getItem("id");
+    const storedId = localStorage.getItem("userId"); // MUDOU: era "id"
     return storedId ? Number(storedId) : null;
   });
 
@@ -27,29 +27,53 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     else localStorage.removeItem("token");
   }, [token]);
 
-  // sincroniza usuário
+  // sincroniza usuário/nome
   useEffect(() => {
-    if (user) localStorage.setItem("usuario", user);
-    else localStorage.removeItem("usuario");
+    if (user) localStorage.setItem("nome", user); // MUDOU: era "usuario"
+    else localStorage.removeItem("nome");
   }, [user]);
 
   // sincroniza ID
   useEffect(() => {
-    if (userId !== null) localStorage.setItem("id", String(userId));
-    else localStorage.removeItem("id");
+    if (userId !== null) localStorage.setItem("userId", String(userId)); // MUDOU: era "id"
+    else localStorage.removeItem("userId");
   }, [userId]);
 
-  const login = useCallback((newToken: string, newUser: string, id: number) => {
+  const login = useCallback((
+    newToken: string, 
+    nome: string, 
+    id: number,
+    email: string,
+    tipoUsuario: string
+  ) => {
+    // Salvar tudo no localStorage
     setToken(newToken);
-    setUser(newUser);
+    setUser(nome);
     setUserId(id);
+    
+    localStorage.setItem("token", newToken);
+    localStorage.setItem("nome", nome);
+    localStorage.setItem("userId", id.toString());
+    localStorage.setItem("email", email);
+    localStorage.setItem("tipoUsuario", tipoUsuario);
   }, []);
 
   const logout = useCallback(() => {
     setToken(null);
     setUser(null);
     setUserId(null);
-    localStorage.clear();
+    
+    // Limpar tudo
+    localStorage.removeItem("token");
+    localStorage.removeItem("nome");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("email");
+    localStorage.removeItem("tipoUsuario");
+    localStorage.removeItem("sobrenome");
+    localStorage.removeItem("avatar");
+    localStorage.removeItem("usuario"); // Limpar versão antiga
+    localStorage.removeItem("id"); // Limpar versão antiga
+    localStorage.removeItem("role"); // Limpar versão antiga
   }, []);
 
   const isAuthenticated = !!token && !!user && userId !== null;
