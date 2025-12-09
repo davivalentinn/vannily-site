@@ -36,9 +36,6 @@ public class Seguranca {
 
                 .authorizeHttpRequests(req -> {
 
-                    // -----------------------
-                    // 📌 ROTAS PÚBLICAS
-                    // -----------------------
                     req.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
 
                     // Login / Registro
@@ -50,9 +47,6 @@ public class Seguranca {
                     req.requestMatchers(HttpMethod.GET, "/produto-roupa/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/produto-jogo/**").permitAll();
 
-                    // -----------------------
-                    // 📌 ROTAS QUE EXIGEM LOGIN
-                    // -----------------------
                     req.requestMatchers("/carrinho/**").authenticated();
                     req.requestMatchers("/favoritos/**").authenticated();
 

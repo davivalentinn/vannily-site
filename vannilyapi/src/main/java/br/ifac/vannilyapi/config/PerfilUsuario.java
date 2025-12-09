@@ -21,7 +21,6 @@ public class PerfilUsuario implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (usuario.getTipoUsuario() != null) {
 
-            // ADMIN também é USER
             if (usuario.getTipoUsuario().name().equals("ADMIN")) {
                 return List.of(
                         new SimpleGrantedAuthority("ROLE_ADMIN"),

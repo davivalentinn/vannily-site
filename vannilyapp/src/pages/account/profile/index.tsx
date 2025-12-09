@@ -36,7 +36,6 @@ export default function Profile() {
       return;
     }
 
-    // Carregar dados do usuário do localStorage (salvos durante o login)
     const idFromStorage = localStorage.getItem("userId");
     const id = idFromStorage ? parseInt(idFromStorage) : (userId ? parseInt(userId.toString()) : 0);
     const nome = localStorage.getItem("nome") || "Usuário";
@@ -46,7 +45,7 @@ export default function Profile() {
     const sobrenome = localStorage.getItem("sobrenome") || "";
     const avatar = localStorage.getItem("avatar") || "";
 
-    console.log("📊 DADOS CARREGADOS DO LOCALSTORAGE:");
+    console.log("DADOS CARREGADOS DO LOCALSTORAGE:");
     console.log("ID:", id);
     console.log("Nome:", nome);
     console.log("Email:", email);
