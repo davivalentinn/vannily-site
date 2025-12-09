@@ -7,6 +7,7 @@ public record LoginGetDto(
     String token,
     String email,
     String nome,
+    String usuario,
     TipoUsuario tipoUsuario
 ) {}
 

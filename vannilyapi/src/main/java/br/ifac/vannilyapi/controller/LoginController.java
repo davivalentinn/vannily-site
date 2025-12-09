@@ -46,6 +46,7 @@ public class LoginController {
                 token,
                 usuarioAutenticado.getEmail(),
                 usuarioAutenticado.getNome(),
+                usuarioAutenticado.getUsuario(),
                 usuarioAutenticado.getTipoUsuario());
 
         return ResponseEntity.ok(dto);
