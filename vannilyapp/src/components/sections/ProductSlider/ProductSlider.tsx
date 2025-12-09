@@ -272,18 +272,18 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                                 {/* Info extra de jogos */}
                                 {product.jogo && (
                                     <div className="absolute top-16 right-3 flex-col gap-2 hidden md:flex">
-                                        <div className="bg-white border-2 rounded-md p-2 w-12 text-xs font-bold text-center shadow-sm">
+                                        <div className="bg-white border-2 text-background rounded-md p-2 w-12 text-xs font-bold text-center shadow-sm">
                                             {product.jogo.classificacaoIndicativa}
                                         </div>
 
                                         <div className="bg-white border-2 rounded-md p-2 w-12 flex flex-col items-center shadow-sm">
                                             <Users className="w-4 h-4 text-background" />
-                                            <span className="text-xs text-bar font-bold">{product.jogo.qtdPessoas}</span>
+                                            <span className="text-xs text-background font-bold">{product.jogo.qtdPessoas}</span>
                                         </div>
 
                                         <div className="bg-white border-2 rounded-md p-2 w-12 flex flex-col items-center shadow-sm">
                                             <Clock className="w-4 h-4 text-background" />
-                                            <span className="text-xs text-bar font-bold">{product.jogo.duracao}</span>
+                                            <span className="text-xs text-background font-bold">{product.jogo.duracao}</span>
                                         </div>
                                     </div>
                                 )}
