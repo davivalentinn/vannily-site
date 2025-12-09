@@ -383,7 +383,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                                 </div>
 
                                 <div className="p-3 flex flex-col flex-1">
-                                    <h3 className="text-sm font-bold line-clamp-2 mb-2">
+                                    <h3 className="text-sm text-bar font-bold line-clamp-2 mb-2">
                                         {product.nome}
                                     </h3>
 
