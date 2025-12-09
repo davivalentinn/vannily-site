@@ -54,9 +54,9 @@ export function Search() {
     }, 300);
 
     return () => clearTimeout(delay);
-  }, [searchValue, lastFilters]); // observe: lastFilters está aqui para reagir a mudanças
+  }, [searchValue, lastFilters]);
 
-  // Carregar todos para aplicar filtro sem search (recebe filtros diretamente)
+  // Carregar todos para aplicar filtro sem search
   async function loadAllForFilters(filters?: any) {
     setLoading(true);
     try {
@@ -77,7 +77,7 @@ export function Search() {
 
     let temp = [...base];
 
-    // tipo: use presença de p.jogo / p.roupa (mais confiável)
+    // tipo: use presença de p.jogo / p.roupa
     if (filters.tipoProduto === "jogo") {
       temp = temp.filter(p => Boolean((p as any).jogo));
     } else if (filters.tipoProduto === "roupa") {
@@ -124,21 +124,79 @@ export function Search() {
 
   // Quando o usuário aplica filtros
   async function handleApplyFilters(filters: any) {
-    // guarda filtros atuais (estado)
     setLastFilters(filters);
-
-    // limpa o texto digitado conforme você pediu
     setSearchValue("");
-
-    // carregar todos os produtos e aplicar os filtros passados — NÃO confiar no estado stale
     await loadAllForFilters(filters);
+  }
 
-    // abrir dropdown (filtered já foi setado por loadAllForFilters)
+  // Função para redirecionar ao pressionar Enter
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    
+    const text = searchValue.trim();
+    if (text.length === 0) return;
+
+    // Redirecionar para /all-products com query string
+    const params = new URLSearchParams({ search: text });
+    
+    // Se houver filtros ativos, adicionar também
+    if (lastFilters) {
+      params.append('filters', JSON.stringify(lastFilters));
+    }
+    
+    navigate(`/all-products?${params.toString()}`);
+    
+    // Limpar dropdown e fechar
+    setFiltered([]);
+  }
+
+  // Função para clicar em um produto do dropdown
+  async function handleProductClick(product: any) {
+    setFiltered([]);
+    
+    // Buscar detalhes completos do produto para obter categoria/tema
+    try {
+      const produtoCompleto = await buscarProdutoPorId(product.id);
+      
+      const params = new URLSearchParams();
+      
+      // Adicionar nome do produto como busca
+      params.append('search', product.nome);
+      
+      // Criar filtros baseados no produto clicado
+      const filters: any = {};
+      
+      // Se for jogo, filtrar por categoria de jogo
+      if (produtoCompleto.jogo) {
+        filters.tipoProduto = 'jogo';
+        
+        // Adicionar tema se existir
+        if (produtoCompleto.jogo.tema) {
+          filters.temaJogo = produtoCompleto.jogo.tema;
+        }
+      }
+      
+      // Se for roupa, filtrar por categoria de roupa
+      if (produtoCompleto.roupa) {
+        filters.tipoProduto = 'roupa';
+      }
+      
+      // Adicionar filtros à URL se houver
+      if (Object.keys(filters).length > 0) {
+        params.append('filters', JSON.stringify(filters));
+      }
+      
+      navigate(`/all-products?${params.toString()}`);
+    } catch (error) {
+      console.error('Erro ao buscar produto:', error);
+      // Em caso de erro, vai apenas com o nome
+      navigate(`/all-products?search=${encodeURIComponent(product.nome)}`);
+    }
   }
 
   return (
     <div className="w-full relative" ref={containerRef}>
-      <form onSubmit={e => e.preventDefault()} className="relative">
+      <form onSubmit={handleSubmit} className="relative">
         <input
           type="text"
           value={searchValue}
@@ -185,7 +243,7 @@ export function Search() {
               <div
                 key={(item as any).id}
                 className="flex items-center gap-4 p-3 hover:bg-gray-100 cursor-pointer transition"
-                onClick={() => navigate(`/produto/${(item as any).id}`)}
+                onClick={() => handleProductClick(item)}
               >
                 <img
                   src={(item as any).imagem}

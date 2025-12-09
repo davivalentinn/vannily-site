@@ -21,13 +21,13 @@ export default function Profile() {
     id: 0,
     nome: "",
     email: "",
-    usuario: "", // ⬅️ Campo de apelido/usuário
+    usuario: "",
     sobrenome: "",
     tipoUsuario: "",
     avatar: ""
   });
   const [isEditing, setIsEditing] = useState(false);
-  const [editedUsuario, setEditedUsuario] = useState(""); // ⬅️ Estado para editar o apelido
+  const [editedUsuario, setEditedUsuario] = useState("");
   const [showDebug, setShowDebug] = useState(false);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function Profile() {
     const nome = localStorage.getItem("nome") || "Usuário";
     const email = localStorage.getItem("email") || "";
     const tipoUsuario = localStorage.getItem("tipoUsuario") || localStorage.getItem("role") || "";
-    const usuario = localStorage.getItem("usuario") || ""; // ⬅️ CARREGANDO O APELIDO
+    const usuario = localStorage.getItem("usuario") || "";
     const sobrenome = localStorage.getItem("sobrenome") || "";
     const avatar = localStorage.getItem("avatar") || "";
 
@@ -51,7 +51,7 @@ export default function Profile() {
     console.log("Nome:", nome);
     console.log("Email:", email);
     console.log("Tipo Usuário:", tipoUsuario);
-    console.log("Usuário (apelido):", usuario); // ⬅️ LOG DO APELIDO
+    console.log("Usuário (apelido):", usuario);
     console.log("Sobrenome:", sobrenome);
     console.log("Avatar:", avatar);
 
@@ -59,12 +59,12 @@ export default function Profile() {
       id, 
       nome, 
       email, 
-      usuario, // ⬅️ ADICIONADO
+      usuario,
       sobrenome,
       tipoUsuario,
       avatar 
     });
-    setEditedUsuario(usuario); // ⬅️ Inicializar o campo editável
+    setEditedUsuario(usuario);
   }, [isAuthenticated, userId, navigate]);
 
   function handleLogout() {
@@ -129,7 +129,7 @@ export default function Profile() {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4">
         
-        {/* Debug Info - Pode remover depois */}
+        {/* Debug Info */}
         {(!userData.nome || !userData.email || userData.nome === "Usuário") && (
           <div className="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4 mb-6">
             <div className="flex items-start gap-3">
@@ -167,23 +167,23 @@ export default function Profile() {
         )}
 
         {/* Seção de Dados Pessoais */}
-        <div className="bg-white rounded-lg shadow-md p-8 mb-8 border-2 border-purple-200">
+        <div className="bg-white rounded-lg shadow-md p-8 mb-8 border-2 border-background">
           <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-            <div className="w-1 h-8 bg-purple-600 rounded"></div>
+            <div className="w-1 h-8 bg-background rounded"></div>
             DADOS PESSOAIS
           </h2>
 
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
             {/* Avatar */}
             <div className="relative">
-              <div className="w-32 h-32 rounded-full border-4 border-purple-300 overflow-hidden bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
+              <div className="w-32 h-32 rounded-full border-4 border-background/30 overflow-hidden bg-gradient-to-br from-background/10 to-background/20 flex items-center justify-center">
                 {userData.avatar ? (
                   <img src={userData.avatar} alt="Avatar" className="w-full h-full object-cover" />
                 ) : (
-                  <User className="w-16 h-16 text-purple-400" />
+                  <User className="w-16 h-16 text-background/60" />
                 )}
               </div>
-              <button className="absolute bottom-0 right-0 bg-purple-600 text-white p-2 rounded-full shadow-lg hover:bg-purple-700 transition-colors">
+              <button className="absolute bottom-0 right-0 bg-background text-white p-2 rounded-full shadow-lg hover:bg-background/90 transition-colors">
                 <Camera className="w-4 h-4" />
               </button>
             </div>
@@ -194,11 +194,11 @@ export default function Profile() {
                 <h3 className="text-2xl font-bold text-gray-800">
                   {userData.nome || "Nome não encontrado"}
                   {userData.usuario && (
-                    <span className="text-purple-600"> (@{userData.usuario})</span>
+                    <span className="text-background"> (@{userData.usuario})</span>
                   )}
                 </h3>
                 {userData.tipoUsuario && (
-                  <span className="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-bold rounded-full">
+                  <span className="px-3 py-1 bg-background/10 text-background text-xs font-bold rounded-full">
                     {userData.tipoUsuario}
                   </span>
                 )}
@@ -217,7 +217,7 @@ export default function Profile() {
                       setEditedUsuario(e.target.value);
                       setIsEditing(true);
                     }}
-                    className="w-full px-4 py-2 border-2 border-purple-300 rounded-lg focus:outline-none focus:border-purple-600"
+                    className="w-full px-4 py-2 border-2 border-background/30 rounded-lg focus:outline-none focus:border-background"
                   />
                   {userData.usuario && (
                     <p className="text-xs text-gray-500 mt-1">
@@ -243,14 +243,14 @@ export default function Profile() {
                 <button 
                   onClick={handleSaveData}
                   disabled={!isEditing}
-                  className="px-6 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-2 bg-background text-white rounded-lg font-semibold hover:bg-background/90 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Alterar meus Dados
                   <span className="text-yellow-300">🔒</span>
                 </button>
                 <button 
                   onClick={handleLogout}
-                  className="px-6 py-2 border-2 border-purple-600 text-purple-600 rounded-lg font-semibold hover:bg-purple-50 transition-colors flex items-center gap-2"
+                  className="px-6 py-2 border-2 border-background text-background rounded-lg font-semibold hover:bg-background/5 transition-colors flex items-center gap-2"
                 >
                   <LogOut className="w-4 h-4" />
                   Sair da Conta
@@ -266,11 +266,11 @@ export default function Profile() {
             <Link
               key={index}
               to={item.link}
-              className="bg-white rounded-lg shadow-md p-6 border-2 border-purple-200 hover:border-purple-400 hover:shadow-lg transition-all group"
+              className="bg-white rounded-lg shadow-md p-6 border-2 border-background/20 hover:border-background hover:shadow-lg transition-all group"
             >
               <div className="flex items-start gap-4">
-                <div className="bg-purple-100 p-3 rounded-lg group-hover:bg-purple-200 transition-colors">
-                  <item.icon className="w-6 h-6 text-purple-600" />
+                <div className="bg-background/10 p-3 rounded-lg group-hover:bg-background/20 transition-colors">
+                  <item.icon className="w-6 h-6 text-background" />
                 </div>
 
                 <div className="flex-1">
@@ -279,7 +279,7 @@ export default function Profile() {
                       {item.title}
                     </h3>
                     {item.badge !== null && (
-                      <span className="bg-purple-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                      <span className="bg-background text-white text-xs font-bold px-2 py-0.5 rounded-full">
                         {item.badge}
                       </span>
                     )}
@@ -294,16 +294,16 @@ export default function Profile() {
         </div>
 
         {/* Histórico de Compras */}
-        <div className="mt-8 bg-white rounded-lg shadow-md p-8 border-2 border-purple-200">
+        <div className="mt-8 bg-white rounded-lg shadow-md p-8 border-2 border-background/20">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-              <div className="w-1 h-8 bg-purple-600 rounded"></div>
+              <div className="w-1 h-8 bg-background rounded"></div>
               HISTÓRICO
             </h2>
-            <span className="text-purple-600 font-semibold">01 - 05</span>
+            <span className="text-background font-semibold">01 - 05</span>
           </div>
 
-          {/* Aqui você pode adicionar os produtos do histórico */}
+          {/* Histórico de produtos */}
           <div className="text-center text-gray-500 py-8">
             <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-gray-300" />
             <p>Nenhuma compra realizada ainda</p>

@@ -277,7 +277,7 @@ export function ProductPage() {
                     key={idx}
                     onClick={() => setImagemSelecionada(idx)}
                     className={`w-20 h-20 bg-gray-100 rounded border-2 overflow-hidden ${
-                      imagemSelecionada === idx ? 'border-purple-600' : 'border-gray-200'
+                      imagemSelecionada === idx ? 'border-background' : 'border-gray-200'
                     }`}
                   >
                     <img
@@ -309,7 +309,7 @@ export function ProductPage() {
             {/* Preço */}
             <div className="space-y-2">
               <div className="flex items-baseline gap-3">
-                <span className="text-4xl font-bold text-purple-600">
+                <span className="text-4xl font-bold text-background">
                   R$ {produto.preco.toFixed(2)}
                 </span>
                 {produto.unidades > 0 && (
@@ -348,8 +348,8 @@ export function ProductPage() {
                       onClick={() => setTamanhoSelecionado(tam)}
                       className={`w-12 h-12 border-2 rounded font-semibold transition-colors ${
                         tamanhoSelecionado === tam
-                          ? 'border-purple-600 bg-purple-50 text-purple-600'
-                          : 'border-gray-300 hover:border-purple-400'
+                          ? 'border-background bg-purple-50 text-background'
+                          : 'border-gray-300 hover:border-background  '
                       }`}
                     >
                       {tam}
@@ -364,7 +364,7 @@ export function ProductPage() {
               <button
                 onClick={comprarAgora}
                 disabled={produto.unidades === 0}
-                className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-4 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex-1 bg-background font-montserrat text-white font-semibold py-4 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {produto.unidades === 0 ? 'Indisponível' : 'Comprar agora'}
               </button>
@@ -373,13 +373,13 @@ export function ProductPage() {
                 onClick={() => toggleFavorite(produto.id)}
                 disabled={adicionandoFavorito}
                 aria-label="Adicionar aos favoritos"
-                className="w-14 h-14 border-2 border-purple-600 rounded flex items-center justify-center disabled:opacity-50 hover:bg-purple-50 transition-colors"
+                className="w-14 h-14 border-2 border-background rounded flex items-center justify-center disabled:opacity-50 hover:bg-purple-50 transition-colors"
               >
                 <Heart 
                   className={`w-6 h-6 ${
                     favorites.includes(produto.id) 
-                      ? 'fill-purple-600 text-purple-600' 
-                      : 'text-purple-600'
+                      ? 'fill-background text-background' 
+                      : 'text-background'
                   }`} 
                 />
               </button>
@@ -387,7 +387,7 @@ export function ProductPage() {
               <button
                 onClick={adicionarAoCarrinho}
                 disabled={adicionandoCarrinho || produto.unidades === 0}
-                className="w-14 h-14 bg-purple-600 hover:bg-purple-700 rounded flex items-center justify-center disabled:opacity-50 transition-colors"
+                className="w-14 h-14 bg-background rounded flex items-center justify-center disabled:opacity-50 transition-colors"
               >
                 <ShoppingCart className="w-6 h-6 text-white" />
               </button>
@@ -427,7 +427,7 @@ export function ProductPage() {
                   </button>
                 </div>
                 
-                <button className="text-purple-600 font-semibold hover:underline">
+                <button className="text-backgroundfont-semibold hover:underline">
                   📦 Calcular o valor do frete
                 </button>
               </div>
@@ -438,7 +438,7 @@ export function ProductPage() {
                   placeholder="Seu cep"
                   className="w-full px-4 py-2 border rounded"
                 />
-                <button className="w-full bg-purple-600 text-white font-semibold py-2 rounded hover:bg-purple-700">
+                <button className="w-full bg-background text-white font-semibold py-2 rounded ">
                   Calcular
                 </button>
               </div>

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "../../context/authContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Search } from "../Search";
 import { ButtonRegisterOrLogin } from "../ButtonRegisterOrLogin";
 import { SubMenu } from "../SubMenuDropdown";
 import { UserLoggedHeader } from "../../features/auth/components/login/UserLoggedHeader";
-import { Heart, ShoppingCart, X, Menu, ChevronRight } from "lucide-react";
+import { Heart, ShoppingCart, X, Menu, ChevronRight, User, LogOut } from "lucide-react";
 import { catalogoItems, modaGeekItems, boardGamesItems } from '../SubMenuDropdown/menuData';
 
 // Componente de seção de categoria
@@ -35,6 +35,15 @@ const CategorySection = ({ title, items, onClose }) => {
 };
 
 const MobileSidebar = ({ isOpen, onClose, isAuthenticated }) => {
+  const { logout, user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    onClose();
+    navigate("/", { replace: true });
+  };
+
   return (
     <>
       {/* Overlay escuro */}
@@ -65,17 +74,45 @@ const MobileSidebar = ({ isOpen, onClose, isAuthenticated }) => {
         {/* Conteúdo */}
         <div className="pb-6">
           {/* Login/Perfil - Topo */}
-          <div className="p-4 bg-gray-50 border-b">
-            {isAuthenticated ? (
-              <div onClick={onClose}>
-                <UserLoggedHeader />
+          {isAuthenticated ? (
+            <div className="p-4 bg-gray-50 border-b">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 flex items-center justify-center rounded-full bg-background text-white">
+                  <User className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900">Olá, {user}</p>
+                  <p className="text-xs text-gray-500">Bem-vindo de volta!</p>
+                </div>
               </div>
-            ) : (
+
+              {/* Links de Perfil */}
+              <div className="space-y-1">
+                <Link
+                  to="/account/profile"
+                  className="flex items-center gap-3 px-3 py-2.5 hover:bg-gray-100 rounded-lg transition-colors"
+                  onClick={onClose}
+                >
+                  <User className="w-4 h-4 text-background" />
+                  <span className="text-sm font-medium text-gray-700">Meu Perfil</span>
+                </Link>
+
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-red-50 rounded-lg transition-colors"
+                >
+                  <LogOut className="w-4 h-4 text-red-600" />
+                  <span className="text-sm font-medium text-red-600">Sair da Conta</span>
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="p-4 bg-gray-50 border-b">
               <div onClick={onClose}>
                 <ButtonRegisterOrLogin />
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Links Rápidos */}
           <div className="py-4 border-b">
@@ -198,7 +235,7 @@ export function Header() {
       <nav className="w-full max-w-7xl h-22 items-center flex justify-between mx-auto gap-4">
         {/* Logo */}
         <div className="py-2 flex items-center gap-2 px-4 pb-1">
-          {/* Menu Hambúrguer (mostra só no mobile) - MOVIDO PARA ANTES DA LOGO */}
+          {/* Menu Hambúrguer (mostra só no mobile) */}
           <button
             onClick={() => setIsMobileMenuOpen(true)}
             className="lg:hidden p-2 bg-button rounded-lg hover:bg-button/90 transition-colors"

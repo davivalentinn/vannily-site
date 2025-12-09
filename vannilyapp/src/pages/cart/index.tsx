@@ -75,10 +75,10 @@ export function Cart() {
     return (
         <main className="w-full max-w-7xl mx-auto px-6 py-8">
             <div className="mb-6">
-                <h1 className="text-3xl font-bold text-purple-900">MEU CARRINHO</h1>
+                <h1 className="text-3xl font-bold text-background">MEU CARRINHO</h1>
                 <button 
                     onClick={handleClearCart}
-                    className="mt-4 px-6 py-2 border-2 border-purple-600 text-purple-600 rounded hover:bg-purple-50 transition"
+                    className="mt-4 px-6 py-2 border-2 border-background text-background rounded hover:bg-pink-50 transition"
                 >
                     LIMPAR
                 </button>
@@ -161,8 +161,8 @@ export function Cart() {
 
                 {/* Painel de Finalização */}
                 <div className="lg:col-span-1">
-                    <div className="bg-white rounded-lg shadow-sm p-6 sticky top-6">
-                        <h2 className="text-xl font-bold text-purple-900 mb-4 flex items-center gap-2">
+                    <div className="bg-white border rounded-lg shadow-sm p-6 sticky top-6">
+                        <h2 className="text-xl font-bold text-background mb-4 flex items-center gap-2">
                             <i className="ri-truck-line"></i>
                             FINALIZAR COMPRA
                         </h2>
@@ -179,12 +179,12 @@ export function Cart() {
                                     placeholder="Seu CEP"
                                     value={cep}
                                     onChange={(e) => setCep(e.target.value)}
-                                    className="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                    className="flex-1 px-3 py-2 border rounded outline-none"
                                     maxLength={9}
                                 />
                                 <button
                                     onClick={handleCalculateShipping}
-                                    className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+                                    className="px-4 py-2 bg-background text-white rounded transition"
                                 >
                                     Calcular
                                 </button>
@@ -224,7 +224,7 @@ export function Cart() {
                                         value="sedex"
                                         checked={selectedShipping === "sedex"}
                                         onChange={() => setSelectedShipping("sedex")}
-                                        className="text-purple-600"
+                                        className="text-background"
                                     />
                                     <div>
                                         <p className="font-medium">SEDEX</p>
@@ -247,7 +247,7 @@ export function Cart() {
                             </div>
                             <div className="flex justify-between text-lg font-bold pt-2 border-t">
                                 <span>Total a pagar:</span>
-                                <span className="text-purple-600">R$ {total.toFixed(2)}</span>
+                                <span className="text-background">R$ {total.toFixed(2)}</span>
                             </div>
                             <p className="text-xs text-gray-500">
                                 à vista ou em até 3x de R$ {(total / 3).toFixed(2)} sem juros
@@ -257,7 +257,7 @@ export function Cart() {
                         {/* Botão de Checkout */}
                         <button
                             onClick={handleCheckout}
-                            className="w-full mt-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-lg hover:from-purple-700 hover:to-pink-700 transition"
+                            className="w-full font-montserrat mt-4 py-3 bg-background text-white font-bold rounded-lg "
                         >
                             Fechar pedido
                         </button>
@@ -272,9 +272,9 @@ export function Cart() {
                                 <input
                                     type="text"
                                     placeholder="Seu CEP"
-                                    className="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                    className="flex-1 px-3 py-2 border rounded outline-none"
                                 />
-                                <button className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition">
+                                <button className="px-4 py-2 bg-background text-white rounded  transition">
                                     Calcular
                                 </button>
                             </div>
