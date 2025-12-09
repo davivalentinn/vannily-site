@@ -132,7 +132,7 @@ export function ProductPage() {
               </div>
 
               {/* Imagem Principal */}
-              <div className="flex-1 bg-gray-100 rounded-lg p-8 flex items-center justify-center">
+              <div id="product-select" className="flex-1 bg-gray-100 rounded-lg p-8 flex items-center justify-center">
                 <img
                   src={imagens[imagemSelecionada]}
                   alt={produto.nome}

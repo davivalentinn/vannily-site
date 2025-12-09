@@ -235,7 +235,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                     {visibleProducts.map(product => (
                         <Link
                             key={product.id}
-                            to={`/produto/${product.id}`}
+                            to={`/produto/${product.id}#product-select`}
                             className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all border flex flex-col overflow-hidden group h-[520px]"
                         >
                             {/* Imagem */}
@@ -272,7 +272,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                                 {/* Info extra de jogos */}
                                 {product.jogo && (
                                     <div className="absolute top-16 right-3 flex-col gap-2 hidden md:flex">
-                                        <div className="bg-white border-2 rounded-md p-2 w-12 text-xs font-bold text-center shadow-sm">
+                                        <div className="bg-white border-2 rounded-md p-2 w-12 text-xs font-bold text-center shadow-sm text-background">
                                             {product.jogo.classificacaoIndicativa}
                                         </div>
 
