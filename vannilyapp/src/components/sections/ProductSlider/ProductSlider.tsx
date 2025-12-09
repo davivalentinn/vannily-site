@@ -272,7 +272,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
                                 {/* Info extra de jogos */}
                                 {product.jogo && (
                                     <div className="absolute top-16 right-3 flex-col gap-2 hidden md:flex">
-                                        <div className="bg-white border-2 rounded-md p-2 w-12 text-xs font-bold text-center shadow-sm text-background">
+                                        <div className="bg-white border-2 rounded-md p-2 w-12 text-xs font-bold text-center shadow-sm">
                                             {product.jogo.classificacaoIndicativa}
                                         </div>
 
